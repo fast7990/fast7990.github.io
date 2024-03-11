@@ -1,0 +1,55 @@
+@import './reset.less';
+@import "animate.css";
+
+:root {
+    --animate-duration: 0.3s; // 控制页面切换动画时长
+    --animate-delay: 0.3s;
+}
+
+.bag-scroll{
+    &::-webkit-scrollbar {
+        width: 0;
+        height: 0;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color: var(--n-action-color);
+    }
+    &::-webkit-scrollbar-track,&::-webkit-scrollbar-track {
+        background: transparent;
+    }
+    &::-webkit-scrollbar-thumb {
+        background-color:var(--n-action-color);
+        border-radius: 6px;
+    }
+}
+
+html, body, #app {
+    height: 100%;
+    width: 100%;
+}
+
+.n-config-provider {
+    height: 100%;
+    width: 100%;
+}
+
+.mobile-mask {
+    z-index: 2999;
+    background-color: rgba(0, 0, 0, .5);
+    opacity: .5;
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    transition: all 0.3s;
+}
+
+.bag-grey {
+    filter: grayscale(100%);
+}
+
+.bag-weak {
+    filter: invert(15%);
+}
+

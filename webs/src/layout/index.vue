@@ -12,7 +12,7 @@
 </template>
 <script lang="ts" setup>
 import { computed, defineComponent, inject, nextTick, ref } from "vue";
-import appStore from "@/pinia/app.ts";
+import appStore from "@/pinia/app";
 
 const app = appStore();
 const isRoad = ref(true);

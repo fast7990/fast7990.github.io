@@ -1,0 +1,11 @@
+"use strict";
+exports.__esModule = true;
+var vue_1 = require("vue");
+var pinia_1 = require("pinia");
+require("./styles/index.css");
+var naive_ui_1 = require("naive-ui");
+var App_vue_1 = require("./App.vue");
+var router_1 = require("@/router");
+var pinia = pinia_1.createPinia();
+var app = vue_1.createApp(App_vue_1["default"]);
+app.use(pinia).use(router_1["default"]).use(naive_ui_1["default"]).mount("#app");

@@ -35,7 +35,7 @@ def initFace():
         # 按Esc键退出
         if cv2.waitKey(1) & 0xFF == 27:
             break
-    del my_came_cap
+    my_came_obj.destroyAllWindows()
 
 
 initFace()

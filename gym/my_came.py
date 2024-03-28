@@ -34,9 +34,9 @@ class VideoCapture:
     def __del__(self):
         if self.cap.isOpened():
             self.cap.release()
-            self.destroyAllWindows()
 
-    def destroyAllWindows():
+    def destroyAllWindows(self):
+        self.cap.release()
         cv2.destroyAllWindows()
 
 

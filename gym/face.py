@@ -35,7 +35,7 @@ def initFace(video_src):
             # 对检测到的人脸进行画框标记
             for (x, y, w, h) in faces:
                 cv2.rectangle(frame, (x, y), (x + w, y + h), (255, 0, 0), 2)
-            print("{} + {}".format("检测到有人脸！时间", datetime.datetime.now())) 
+            print("{} + {}".format("persion！时间:", datetime.datetime.now()))
 
         # 判断画面是否正确读取
         if not ret:

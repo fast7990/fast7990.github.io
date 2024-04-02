@@ -13,6 +13,12 @@ var routerMap = [
                 meta: { title: "首页" },
                 component: function () { return Promise.resolve().then(function () { return require("@/view/home/index.vue"); }); }
             },
+            {
+                path: "/news",
+                name: "news",
+                meta: { title: "新闻" },
+                component: function () { return Promise.resolve().then(function () { return require("@/view/news/index.vue"); }); }
+            },
         ]
     },
 ];

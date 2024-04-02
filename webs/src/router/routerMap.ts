@@ -13,6 +13,12 @@ const routerMap: Array<RouteRecordRaw> = [
         meta: { title: "首页" },
         component: () => import("@/view/home/index.vue"),
       },
+      {
+        path: "/news",
+        name: "news",
+        meta: { title: "新闻" },
+        component: () => import("@/view/news/index.vue"),
+      },
     ],
   },
   //   {

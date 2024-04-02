@@ -1,7 +1,14 @@
+/*
+ * @Date: 2024-03-15 17:10:16
+ * @LastEditors: v-huangshaopeng
+ * @LastEditTime: 2024-04-02 17:55:03
+ * @FilePath: \fast7990.github.io\webs\vite.config.ts
+ */
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import path from "path";
-// https://vitejs.dev/config/
+import tailwindcss from "tailwindcss";
+import autoprefixer from "autoprefixer";
 export default defineConfig({
   base: "./",
   plugins: [vue()],
@@ -13,11 +20,9 @@ export default defineConfig({
     extensions: [".mjs", ".js", ".ts", ".jsx", ".tsx", ".json", ".vue"], // 自动匹配文件后缀名
   },
   //新增
-  // css: {
-  //   preprocessorOptions: {
-  //     scss: {
-  //       additionalData: '@import "./src/styles/index.scss";', //引入scss文件
-  //     },
-  //   },
-  // },
+  css: {
+    postcss: {
+      plugins: [tailwindcss, autoprefixer],
+    },
+  },
 });

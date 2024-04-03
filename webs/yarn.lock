@@ -1295,6 +1295,11 @@
     "vdirs" "^0.1.4"
     "vooks" "^0.2.4"
 
+"wavesurfer.js@^7.7.7":
+  "integrity" "sha512-cFnzxi6T6A5UH5CgiXCpV8KPgDvwzK5S3b54Hq1g+o1KzXH2CouavRj1ciwLBLXf6MK1eG9JnbhxF/1ppZ2iGQ=="
+  "resolved" "https://registry.npmjs.org/wavesurfer.js/-/wavesurfer.js-7.7.7.tgz"
+  "version" "7.7.7"
+
 "which@^2.0.1":
   "integrity" "sha512-BLI3Tl1TW3Pvl70l3yq3Y64i+awpwXqsGBYWkkqMtnbXgrMD+yj7rhW0kuEDxzJaYXGjEW5ogapKNMEKNMjibA=="
   "resolved" "https://registry.npmjs.org/which/-/which-2.0.2.tgz"

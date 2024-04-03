@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-04-03 10:49:58
  * @LastEditors: v-huangshaopeng
- * @LastEditTime: 2024-04-03 11:47:41
+ * @LastEditTime: 2024-04-03 16:24:37
  * @FilePath: \fast7990.github.io\webs\src\common\js\wavsurfer.ts
  */
 let AudioContext = null;
@@ -76,7 +76,7 @@ class wavSurfer {
         oW / 2,
         oH / 2 + 2
       );
-      color1.addColorStop(0, "RGBA(48, 218, 213, 0.8)");
+      color1.addColorStop(0, "RGBA(18, 33, 213, 0.8)");
       // color1.addColorStop(.25, '#FF7F50');
       // color1.addColorStop(.5, '#8A2BE2');
       // color1.addColorStop(.75, '#4169E1');

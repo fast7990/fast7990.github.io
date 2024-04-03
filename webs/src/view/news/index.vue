@@ -1,22 +1,23 @@
 <template>
   <div class="h-6">
-    <h1 class="text-[30px] font-bold underline">1212</h1>
-    <p class="w-32 h-32 md:bg-blue-200 xl:bg-red-200 bg-green-200 menu">
-      asds<span>sd</span>
-    </p>
-    <wavBar ref="wavBarRef" @load="data.load"></wavBar>
+    <h1 class="text-[30px] font-bold underline">1</h1>
+    <button @click="handlerData.stopPlay">111</button>
+    <wavBar class="w-auto h-10" ref="wavBarRef" @load="handlerData.load"></wavBar>
   </div>
 </template>
 <script lang="ts" setup>
 import wavBar from "@/components/wavBar.vue";
 import { reactive, ref, onMounted, watch } from "vue";
 const wavBarRef = ref();
-const data = reactive({
-  load: () => {
-    setTimeout(() => {
-      wavBarRef.value.dom.startStop();
-    }, 2000);
+const handlerData = reactive({
+  load: (wavesurfer) => {
+    handlerData.wavesurfer = wavesurfer;
+    console.log(wavesurfer, "===");
   },
+  stopPlay: () => {
+    handlerData.wavesurfer.stop();
+  },
+  wavesurfer: null,
 });
 </script>
 <style lang="postcss">

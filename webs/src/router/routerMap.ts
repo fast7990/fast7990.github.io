@@ -5,7 +5,7 @@ const routerMap: Array<RouteRecordRaw> = [
     path: "/",
     name: "main",
     component: () => import("@/layout/index.vue"),
-    redirect: "home",
+    redirect: "sse",
     children: [
       {
         path: "/home",
@@ -18,6 +18,12 @@ const routerMap: Array<RouteRecordRaw> = [
         name: "news",
         meta: { title: "新闻" },
         component: () => import("@/view/news/index.vue"),
+      },
+      {
+        path: "/sse",
+        name: "sse",
+        meta: { title: "sse" },
+        component: () => import("@/view/sse/index.vue"),
       },
     ],
   },

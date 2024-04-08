@@ -6,7 +6,6 @@
 -->
 <template>
   <div class="main-page">
-    <header>asdasd</header>
     <router-view v-slot="{ Component }" v-if="isRoad">
       <transition mode="out-in">
         <keep-alive v-if="app.userSetting.keepAlive" :max="30" :include="caches">

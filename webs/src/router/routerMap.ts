@@ -4,7 +4,6 @@ const routerMap: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "main",
-    component: () => import("@/layout/index.vue"),
     redirect: "sse",
     children: [
       {

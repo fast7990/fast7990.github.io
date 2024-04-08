@@ -1,11 +1,12 @@
 <!--
  * @Date: 2024-03-15 17:42:13
  * @LastEditors: v-huangshaopeng
- * @LastEditTime: 2024-03-20 18:16:03
+ * @LastEditTime: 2024-04-08 15:11:25
  * @FilePath: \fast7990.github.io\webs\src\layout\index.vue
 -->
 <template>
   <div class="main-page">
+    <header>asdasd</header>
     <router-view v-slot="{ Component }" v-if="isRoad">
       <transition mode="out-in">
         <keep-alive v-if="app.userSetting.keepAlive" :max="30" :include="caches">

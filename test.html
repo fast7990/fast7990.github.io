@@ -1,5 +1,33 @@
-<html>
-  <body>
-        <input type="file"accept="image/png, image/jpeg">上传图片</input>
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+</head>
+<body>
+    <form id="upload-image-form" enctype="multipart/form-data">
+        <input type="file" name="image" id="image-input">
+        <button type="submit">Upload Image</button>
+    </form>
+  <image id="imgbox" style="width:200px;height:200px;" src=""></image>
+</body>
+  <script>
+    document.getElementById('upload-image-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+let img =  document.getElementById('img')
+img.src = document.getElementById('image-input').files[0]
+
+    const formData = new FormData(this);
+    formData.append('image', document.getElementById('image-input').files[0]);
+
+    fetch('/upload', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error(error));
+});
+  </script>
 </html>

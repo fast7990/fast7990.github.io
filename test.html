@@ -10,12 +10,12 @@
         <input type="file" name="image" id="image-input">
         <button type="submit">Upload Image</button>
     </form>
-  <image id="imgbox" style="width:200px;height:200px;" src=""></image>
+  <image id="imgbox" style="width:200px;height:200px;background:#ccc;" src=""></image>
 </body>
   <script>
     document.getElementById('upload-image-form').addEventListener('submit', function (event) {
     event.preventDefault();
-let img =  document.getElementById('img')
+let img =  document.getElementById('imgbox')
 img.src = document.getElementById('image-input').files[0]
 
     const formData = new FormData(this);

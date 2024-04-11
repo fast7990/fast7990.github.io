@@ -15,9 +15,16 @@
   <script>
     document.getElementById('upload-image-form').addEventListener('submit', function (event) {
     event.preventDefault();
-let img =  document.getElementById('imgbox')
-img.src = document.getElementById('image-input').files[0]
+    let img =  document.getElementById('imgbox')
+    file = document.getElementById('image-input').files[0]
+   const reader = new FileReader();
 
+    reader.onload = function(e) {
+        document.getElementById('imgbox').src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+        
     const formData = new FormData(this);
     formData.append('image', document.getElementById('image-input').files[0]);
 

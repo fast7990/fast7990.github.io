@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Upload</title>
+</head>
+<body>
+    <form id="upload-image-form" enctype="multipart/form-data">
+        <input type="file" name="image" id="image-input">
+        <button type="submit">Upload Image</button>
+    </form>
+  <image id="imgbox" style="width:200px;height:200px;background:#ccc;" src=""></image>
+</body>
+  <script>
+    document.getElementById('upload-image-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    let img =  document.getElementById('imgbox')
+    file = document.getElementById('image-input').files[0]
+   const reader = new FileReader();
+
+    reader.onload = function(e) {
+        document.getElementById('imgbox').src = e.target.result;
+    };
+
+    reader.readAsDataURL(file);
+        
+    const formData = new FormData(this);
+    formData.append('image', document.getElementById('image-input').files[0]);
+
+    fetch('/upload', {
+        method: 'POST',
+        body: formData
+    })
+        .then(response => response.json())
+        .then(data => console.log(data))
+        .catch(error => console.error(error));
+});
+  </script>
+</html>

@@ -3,6 +3,7 @@
     <n-button @click="open">打开</n-button>
     <n-button @click="close">关闭</n-button>
     <p>{{ handlerData.textvalue }}</p>
+    <input type="file">上传</input>
   </div>
 </template>
 <script lang="ts" setup>

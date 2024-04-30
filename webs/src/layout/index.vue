@@ -1,7 +1,7 @@
 <!--
  * @Date: 2024-03-15 17:42:13
  * @LastEditors: v-huangshaopeng
- * @LastEditTime: 2024-04-08 15:11:25
+ * @LastEditTime: 2024-04-30 10:30:19
  * @FilePath: \fast7990.github.io\webs\src\layout\index.vue
 -->
 <template>
@@ -19,7 +19,6 @@
 <script lang="ts" setup>
 import { computed, defineComponent, inject, nextTick, ref } from "vue";
 import appStore from "@/pinia/app";
-
 const app = appStore();
 const isRoad = ref(true);
 const caches = computed(() => {

@@ -15,7 +15,7 @@
     <button type="submit">Upload Image</button>
   </form>
   <image id="imgbox" style="width:200px;height:200px;background:#ccc;" src=""></image>
-  <button id="buttonck">click me</button>
+  <button id="buttonck">click me 2</button>
 </body>
 <script>
   // 初始化
@@ -51,7 +51,7 @@
         console.log('navigator.mediaDevices is not supported.');
       }
       if (navigator.mediaDevices.getUserMedia) {
-        navigator.getUserMedia({ audio: true }, function (stream) {
+        navigator.mediaDevices.getUserMedia({ audio: true }, function (stream) {
           console.log('Microphone access granted.');
         }, function (error) {
           console.log('Microphone access denied:', error);

@@ -50,14 +50,14 @@
       } else {
         console.log('navigator.mediaDevices is not supported.');
       }
-      if (navigator.getUserMedia) {
+      if (navigator.mediaDevices.getUserMedia) {
         navigator.getUserMedia({ audio: true }, function (stream) {
           console.log('Microphone access granted.');
         }, function (error) {
           console.log('Microphone access denied:', error);
         });
       } else {
-        console.log('getUserMedia not supported');
+        console.log('getUserMedia not supported 11');
       }
     });
   })

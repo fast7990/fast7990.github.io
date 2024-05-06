@@ -45,36 +45,47 @@
   });
   $(function () {
     $("#buttonck").click(function () {
-      if ('mediaDevices' in navigator) {
-        console.log('navigator.mediaDevices is supported.');
-      } else {
-        console.log('navigator.mediaDevices is not supported.');
-      }
-      var constrains = { audio: true }
-      if (navigator.mediaDevices.getUserMedia) {
-        // 最新标准API
-        navigator.mediaDevices.getUserMedia(constrains).then(stream => { success(stream); }).catch(err => { error(err); });
-      } else if (navigator.webkitGetUserMedia) {
-        // webkit内核浏览器
-        navigator.webkitGetUserMedia(constrains).then(stream => { success(stream); }).catch(err => { error(err); });
-      } else if (navigator.mozGetUserMedia) {
-        // Firefox浏览器
-        navigator.mozGetUserMedia(constrains).then(stream => { success(stream); }).catch(err => { error(err); });
-      } else if (navigator.getUserMedia) {
-        // 旧版API
-        navigator.getUserMedia(constrains).then(stream => { success(stream); }).catch(err => { error(err); });
-      }
+      getUserMedia({ audio: true }, function (res) {
+        console.log(res);
+        if (res) {
+          navigator.mediaDevices.getUserMedia({ audio: true })
+            .then(stream => {
+              // 处理音频流
+              console.log("1", stream);
+            })
+            .catch(err => {
+              // 处理错误
+              console.log(err);
+              console.log("2", stream);
+            });
+        }
+      })
     });
   })
-  // 成功的回调函数
-  function success(stream) {
-    console.log("已点击允许,开启成功");
-    alert('已点击允许,开启成功')
-  }
-  // 异常的回调函数
-  function error(error) {
-    console.log("访问用户媒体设备失败：", error.name, error.message);
-    alert(`访问用户媒体设备失败,${error.name, error.message}`)
+  function getUserMedia(constrains, callback) {
+    // 用localStorage进行记录，之前没有授权的话，先触发录音授权，避免影响后 续交互
+    // @ts-ignore
+    if (!localStorage.allowRecord || localStorage.allowRecord !== "true") {
+      // @ts-ignore
+      if (wx) {
+        // @ts-ignore
+        wx.startRecord({
+          success: function () {
+            localStorage.allowRecord = "true";
+            // 仅仅为了授权，所以立刻停掉
+            // @ts-ignore
+            wx.stopRecord();
+            callback(true);
+          },
+          cancel: function () {
+            alert("用户拒绝授权录音");
+            callback(false);
+          },
+        });
+      } else {
+        callback(false);
+      }
+    }
   }
 </script>
 

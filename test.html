@@ -1,40 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Image Upload</title>
-</head>
-<body>
-    <form id="upload-image-form" enctype="multipart/form-data">
-        <input type="file" name="image" id="image-input">
-        <button type="submit">Upload Image</button>
-    </form>
-  <image id="imgbox" style="width:200px;height:200px;background:#ccc;" src=""></image>
-</body>
-  <script>
-    document.getElementById('upload-image-form').addEventListener('submit', function (event) {
-    event.preventDefault();
-    let img =  document.getElementById('imgbox')
-    file = document.getElementById('image-input').files[0]
-   const reader = new FileReader();
 
-    reader.onload = function(e) {
-        document.getElementById('imgbox').src = e.target.result;
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Image Upload</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.bootcss.com/vConsole/3.3.4/vconsole.min.js"></script>
+</head>
+
+<body>
+  <form id="upload-image-form" enctype="multipart/form-data">
+    <input type="file" name="image" id="image-input">
+    <button type="submit">Upload Image</button>
+  </form>
+  <image id="imgbox" style="width:200px;height:200px;background:#ccc;" src=""></image>
+  <button id="buttonck">click me</button>
+</body>
+<script>
+  // 初始化
+  var vConsole = new VConsole();
+  document.getElementById('upload-image-form').addEventListener('submit', function (event) {
+    event.preventDefault();
+    let img = document.getElementById('imgbox')
+    file = document.getElementById('image-input').files[0]
+    const reader = new FileReader();
+
+    reader.onload = function (e) {
+      document.getElementById('imgbox').src = e.target.result;
     };
 
     reader.readAsDataURL(file);
-        
+
     const formData = new FormData(this);
     formData.append('image', document.getElementById('image-input').files[0]);
 
     fetch('/upload', {
-        method: 'POST',
-        body: formData
+      method: 'POST',
+      body: formData
     })
-        .then(response => response.json())
-        .then(data => console.log(data))
-        .catch(error => console.error(error));
-});
-  </script>
+      .then(response => response.json())
+      .then(data => console.log(data))
+      .catch(error => console.error(error));
+  });
+  $(function () {
+    $("#buttonck").click(function () {
+      if ('mediaDevices' in navigator) {
+        console.log('navigator.mediaDevices is supported.');
+      } else {
+        console.log('navigator.mediaDevices is not supported.');
+      }
+      if (navigator.getUserMedia) {
+        navigator.getUserMedia({ audio: true }, function (stream) {
+          console.log('Microphone access granted.');
+        }, function (error) {
+          console.log('Microphone access denied:', error);
+        });
+      } else {
+        console.log('getUserMedia not supported');
+      }
+    });
+  })
+</script>
+
 </html>

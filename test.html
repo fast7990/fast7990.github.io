@@ -51,16 +51,30 @@
         console.log('navigator.mediaDevices is not supported.');
       }
       if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ audio: true }, function (stream) {
-          console.log('Microphone access granted.');
-        }, function (error) {
-          console.log('Microphone access denied:', error);
-        });
-      } else {
-        console.log('getUserMedia not supported 11');
+        // 最新标准API
+        navigator.mediaDevices.getUserMedia(constrains).then(stream => { success(stream); }).catch(err => { error(err); });
+      } else if (navigator.webkitGetUserMedia) {
+        // webkit内核浏览器
+        navigator.webkitGetUserMedia(constrains).then(stream => { success(stream); }).catch(err => { error(err); });
+      } else if (navigator.mozGetUserMedia) {
+        // Firefox浏览器
+        navigator.mozGetUserMedia(constrains).then(stream => { success(stream); }).catch(err => { error(err); });
+      } else if (navigator.getUserMedia) {
+        // 旧版API
+        navigator.getUserMedia(constrains).then(stream => { success(stream); }).catch(err => { error(err); });
       }
     });
   })
+  // 成功的回调函数
+  function success(stream) {
+    console.log("已点击允许,开启成功");
+    alert('已点击允许,开启成功')
+  }
+  // 异常的回调函数
+  function error(error) {
+    console.log("访问用户媒体设备失败：", error.name, error.message);
+    alert(`访问用户媒体设备失败,${error.name, error.message}`)
+  }
 </script>
 
 </html>

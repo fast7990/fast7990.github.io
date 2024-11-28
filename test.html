@@ -11,7 +11,21 @@
 
 <body>
   <form id="upload-image-form" enctype="multipart/form-data">
-    <input type="file" name="image" id="image-input">
+    <div>
+      <label>
+        文件<input type="file" name="image" id="image-input">
+      </label>
+    </div>
+    <div>
+      <label>
+        图片<input type="file" name="image" accept="image/*" id="image-input2">
+      </label>
+    </div>
+    <div>
+      <label>
+        视频<input type="file" name="image" accept="video/*" id="image-input2">
+      </label>
+    </div>
     <button type="submit">Upload Image</button>
   </form>
   <image id="imgbox" style="width:200px;height:200px;background:#ccc;" src=""></image>

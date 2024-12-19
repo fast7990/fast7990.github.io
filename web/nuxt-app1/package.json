@@ -10,11 +10,17 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxtjs/axios": "^5.13.6",
+    "md5": "^2.3.0",
+    "mysql": "^2.18.1",
+    "mysql2": "^3.11.5",
     "nuxt": "^3.14.1592",
+    "sequelize": "^6.37.5",
     "vue": "latest",
     "vue-router": "latest"
   },
   "devDependencies": {
+    "@element-plus/nuxt": "^1.1.1",
     "@unocss/nuxt": "^0.65.1",
     "unocss": "^0.65.1"
   }

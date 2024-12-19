@@ -7,5 +7,5 @@
   </div>
 </template>
 <script setup lang="ts">
-const id: string = ref("");
+const id:string = ref("");
 </script>

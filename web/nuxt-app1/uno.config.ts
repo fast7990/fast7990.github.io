@@ -1,9 +1,3 @@
-/*
- * @Date: 2024-12-05 16:13:27
- * @LastEditors: v-huangshaopeng
- * @LastEditTime: 2024-12-05 16:30:34
- * @FilePath: \nuxt-app\uno.config.ts
- */
 import {
   defineConfig,
   presetAttributify,

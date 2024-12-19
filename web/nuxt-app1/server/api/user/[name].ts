@@ -1,7 +1,7 @@
 /*
  * @Date: 2024-12-19 15:11:26
  * @LastEditors: v-huangshaopeng
- * @LastEditTime: 2024-12-19 18:25:31
+ * @LastEditTime: 2024-12-19 18:33:42
  * @FilePath: \nuxt-app1\server\api\user\[name].ts
  */
 import db from "@/utils/db/localtable";
@@ -27,7 +27,7 @@ const list = async (event) => {
         "deleted_at",
       ],
     });
-    console.log(results, "====results");
+    // console.log(results, "====results");
     let data = results ? results : [];
     return {
       code: 200,

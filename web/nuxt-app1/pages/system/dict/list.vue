@@ -1,8 +1,8 @@
 <!--
  * @Date: 2024-12-05 18:30:05
  * @LastEditors: v-huangshaopeng
- * @LastEditTime: 2024-12-23 15:06:04
- * @FilePath: \nuxt-app1\pages\user\list.vue
+ * @LastEditTime: 2024-12-23 17:24:57
+ * @FilePath: \nuxt-app1\pages\system\dict\list.vue
 -->
 <template>
   <div>
@@ -13,8 +13,8 @@
       <el-button class="ml-3" @click="getData"> 搜索 </el-button>
     </div>
     <el-table :data="pageData.tableData" style="width: 100%">
-      <el-table-column prop="username" label="username" />
-      <el-table-column prop="email" label="email" />
+      <el-table-column prop="name" label="name" />
+      <el-table-column prop="code" label="code" />
       <el-table-column prop="status" label="status" />
       <el-table-column prop="create_time" label="create_time" />
       <el-table-column fixed="right" label="操作" min-width="120">
@@ -60,7 +60,7 @@ const pageData = reactive({
 const handleClick = (scope: any, type: number) => {
   console.log(scope, type);
   if (type == 1) {
-    $fetch("/api/user/delete", {
+    $fetch("/api/sys/dict/delete", {
       method: "POST",
       params: {
         id: scope.row.id,
@@ -72,12 +72,12 @@ const handleClick = (scope: any, type: number) => {
     });
   } else if (type == 2) {
     router.push({
-      path: "/user/" + scope.row.id,
+      path: "/system/dict/" + scope.row.id,
     });
   }
 };
 const getData = async () => {
-  const res = await $fetch("/api/user/list", {
+  const res = await $fetch("/api/sys/dict/list", {
     method: "POST",
     params: {
       page: pageData.page,

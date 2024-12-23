@@ -1,8 +1,8 @@
 /*
  * @Date: 2024-12-19 15:11:26
  * @LastEditors: v-huangshaopeng
- * @LastEditTime: 2024-12-23 17:19:00
- * @FilePath: \nuxt-app1\server\api\user\[name].ts
+ * @LastEditTime: 2024-12-23 17:23:45
+ * @FilePath: \nuxt-app1\server\api\sys\dict\[type].ts
  */
 import db from "@/utils/db/localtable";
 const list = async (event) => {
@@ -14,15 +14,15 @@ const list = async (event) => {
   console.log(query, "====query");
   try {
     // 实现分页查询用户信息sql
-    let results = await db.findByPage("user", page, pageSize, {
+    let results = await db.findByPage("sys_dict_type", page, pageSize, {
       attributes: [
         "id",
-        "username",
-        "email",
+        "name",
+        "code",
         "status",
         "create_time",
         "update_time",
-        "deleted_at",
+        "remark",
       ],
     });
     // console.log(results, "====results");
@@ -51,10 +51,10 @@ const create = async (event) => {
   }
   try {
     // 创建用户信息sql
-    let results = await db.add("user", {
-      username: body.username,
-      email: body.email,
-      password: body.password,
+    let results = await db.add("sys_dict_type", {
+      name: body.name,
+      code: body.code,
+      remark: body.remark,
       status: 1,
       create_time: new Date(),
       update_time: new Date(),
@@ -84,7 +84,7 @@ const deleted = async (event) => {
   }
   try {
     // 删除用户信息sql
-    let results = await db.delete("user", {
+    let results = await db.delete("sys_dict_type", {
       where: { id: query.id },
     });
     let data = results ? results : [];
@@ -118,8 +118,9 @@ const update = async (event) => {
       "user",
       {
         id: body.id,
-        username: body.username,
-        email: body.email,
+        name: body.name,
+        code: body.code,
+        remark: body.remark,
         status,
         password,
         update_time: new Date(),
@@ -145,14 +146,15 @@ const detail = async (event) => {
   const query = getQuery(event);
   try {
     // 查询用户信息sql
-    let results = await db.findAll("user", {
+    let results = await db.findAll("sys_dict_type", {
       attributes: [
         "id",
-        "username",
-        "email",
+        "name",
+        "code",
         "status",
         "create_time",
         "update_time",
+        "remark",
       ],
       where: { id: query.id },
     });
@@ -170,9 +172,9 @@ const detail = async (event) => {
   }
 };
 export default defineEventHandler(async (event) => {
-  const { name } = event.context.params;
-  console.log("====type====", name);
-  switch (name) {
+  const { type } = event.context.params;
+  console.log("====type====", type);
+  switch (type) {
     case "list":
       return await list(event);
       break;

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SSE Example</title>
+</head>
+
+<body>
+    <h1 id="title">Server-Sent Events Example</h1>
+    <ul id="messages"></ul>
+
+    <script>
+        const eventSource = new EventSource('http://localhost:3000/events');
+
+        eventSource.onmessage = function (event) {
+            console.log('Received event from server:', event.data);
+            const li = document.createElement('li');
+            li.textContent = event.data;
+            document.getElementById('messages').appendChild(li);
+        };
+        eventSource.addEventListener('close', function (event) {
+            console.log('Connection closed by server:', event.data);
+            eventSource.close(); // 关闭连接，不再尝试重新连接
+        });
+        // 点击id=title的元素时，向服务器发送一个GET请求
+        document.getElementById('title').addEventListener('click', function () {
+            // fetch('http://localhost:3000/api', { method: 'GET' })
+            //     .then(response => response.json())
+            //     .then(data => console.log(data))
+            //     .catch(error => console.error(error));
+            eventSource.close();
+        });
+    </script>
+</body>
+
+</html>

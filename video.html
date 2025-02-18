@@ -20,6 +20,9 @@
       preload="auto"
       width="640"
       height="264"
+      data-setup="{}"
+      playsinline
+      webkit-playsinline
     >
       <source src="http://vjs.zencdn.net/v/oceans.mp4" type="video/mp4" />
     </video>
@@ -28,5 +31,13 @@
     var player = videojs("my-video", {
       fluid: false, // 设置是否使用流体布局，false为固定大小布局
     });
+    document.getElementById("my-video").addEventListener(
+      "click",
+      function (event) {
+        event.preventDefault(); // 阻止默认行为
+        player.play(); // 使用 Video.js 播放
+      },
+      { passive: false }
+    );
   </script>
 </html>

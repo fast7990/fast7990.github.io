@@ -11,4 +11,6 @@ import skysea from "@/components/skysea.vue";
 onMounted(() => {});
 </script>
 
-<style scoped></style>
+<style scoped>
+
+</style>

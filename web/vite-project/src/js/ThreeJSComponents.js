@@ -97,7 +97,7 @@ export function createSky(scene) {
 }
 
 // 动画循环
-export function animate(scene, camera, renderer, water, sky, effectController, sun, phi, theta) {
+export function animate(scene, camera, renderer, water, sky, effectController, sun, phi, theta, controls) {
   function animateInternal() {
     requestAnimationFrame(animateInternal);
 
@@ -112,6 +112,7 @@ export function animate(scene, camera, renderer, water, sky, effectController, s
       sky.material.uniforms["sunPosition"].value.copy(sun);
     }
 
+    controls.update(); // 确保轨道控制器更新
     renderer.render(scene, camera);
   }
 

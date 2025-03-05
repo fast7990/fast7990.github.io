@@ -37,7 +37,8 @@ function init() {
   scene = initScene;
   camera = initCamera;
   renderer = initRenderer;
-
+  camera.position.set(10, 10, 20);
+  camera.lookAt(0, 0, 0);
   // 创建轨道控制器
   controls = createOrbitControls(camera, renderer.domElement);
 
@@ -63,7 +64,8 @@ function init() {
     effectController,
     sun,
     phi,
-    theta
+    theta,
+    controls
   );
   animateFunction();
 

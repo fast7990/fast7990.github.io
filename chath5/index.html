@@ -111,14 +111,22 @@
         color: white;
         border-top-right-radius: 0.05rem;
       }
+      .footer-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background-color: white;
+        /* 考虑苹果安全区高度 */
+        padding-bottom: env(safe-area-inset-bottom);
+      }
 
       .input-area {
         display: flex;
         align-items: center;
         padding: 0.2rem 0.4rem;
-        background-color: white;
         border-top: 1px solid var(--border);
-        height: 1rem;
+        height: auto;
       }
 
       .text-input {
@@ -318,31 +326,33 @@
         </div> -->
         </div>
       </div>
-      <div class="input-area">
-        <button class="input-btn" id="keyboard-btn">
-          <i class="fas fa-keyboard"></i>
-        </button>
-        <div id="text-input-container" class="text-input-container">
-          <input
-            type="text"
-            class="text-input"
-            id="message-input"
-            placeholder="输入你的问题..."
-          />
-        </div>
-        <div
-          id="voice-input-container"
-          class="voice-input-container"
-          style="display: none"
-        >
-          <div id="voice-input-btn">
-            <button class="text-input" id="voiceInputBtnBox">按住说话</button>
-            <canvas class="waveform-canvas" id="waveformCanvas"></canvas>
+      <div class="footer-container">
+        <div class="input-area">
+          <button class="input-btn" id="keyboard-btn">
+            <i class="fas fa-keyboard"></i>
+          </button>
+          <div id="text-input-container" class="text-input-container">
+            <input
+              type="text"
+              class="text-input"
+              id="message-input"
+              placeholder="输入你的问题..."
+            />
           </div>
+          <div
+            id="voice-input-container"
+            class="voice-input-container"
+            style="display: none"
+          >
+            <div id="voice-input-btn">
+              <button class="text-input" id="voiceInputBtnBox">按住说话</button>
+              <canvas class="waveform-canvas" id="waveformCanvas"></canvas>
+            </div>
+          </div>
+          <button class="input-btn send-btn" id="send-btn">
+            <i class="fas fa-paper-plane"></i>
+          </button>
         </div>
-        <button class="input-btn send-btn" id="send-btn">
-          <i class="fas fa-paper-plane"></i>
-        </button>
       </div>
     </div>
 
@@ -368,9 +378,7 @@
           <div class="modal-body">
             <!-- 场景选择 -->
             <div class="scene-selector">
-              <div class="scene-item">
-                ddd
-              </div>
+              <div class="scene-item">ddd</div>
             </div>
             <!-- 角色选择 -->
             <div class="role-selector">

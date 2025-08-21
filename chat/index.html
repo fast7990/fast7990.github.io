@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8" />
+  <!-- 禁止移动端拖拉 -->
+  <meta name="touch-action" content="none">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>口语陪练</title>
+  <link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+  <link href="./style/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="./style/css/common.css?s=1694500000000" rel="stylesheet" />
+  <script src="./style/baseConfig.js"></script>
+  <script src="./style/jquery.min.js"></script>
+  <script src="./style/bootstrap.min.js"></script>
+  <script src="./style/recorder.js"></script>
+  <script src="./style/layui.mobile.js"></script>
+  <script src="./style/rem.js"></script>
+  <script src="./style/audioRecorder.js"></script>
+  <script src="./style/getParams.js"></script>
+  <script src="./style/jquery.touch.js"></script>
+  <style>
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.2rem 0.4rem;
+      z-index: 100;
+    }
+
+    .header-btn {
+      display: flex;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      background-color: var(--bg-light);
+      border: none;
+      cursor: pointer;
+      color: var(--text-dark);
+      font-size: 0.3rem;
+      transition: all 0.2s ease;
+    }
+
+    .header-btn img {
+      height: 0.49rem;
+      margin-bottom: 0.1rem;
+
+    }
+
+
+    .conversation-container-wrapper {
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+      overflow-y: auto;
+      overflow-x: hidden;
+    }
+
+    .conversation-container {
+      flex: 1;
+      margin: 0.2rem;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      border-radius: 0.1rem;
+      /* background-color: #ffffff; */
+      padding: 0.25rem 0rem;
+    }
+
+    .scene-selector {
+      margin: 0 0.2rem 0.2rem;
+      border-radius: 0.1rem;
+      background-color: #ffffff;
+      padding: 0.25rem 0.4rem;
+    }
+
+    .scene-selector>div {
+      display: flex;
+
+    }
+
+    .scene-selector .scene-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.2rem;
+    }
+
+    .scene-selector .scene-list li {
+      position: relative;
+      padding: 0.1rem 0.2rem;
+      border-radius: 0.1rem;
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      font-size: 0.26rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .scene-selector .scene-list li.active {
+      background-color: #373b3e;
+      color: white;
+    }
+
+    .scene-selector .scene-list li .close-btn {
+      position: absolute;
+      top: -0.15rem;
+      right: -0.15rem;
+      font-size: 0.3rem;
+      color: var(--text-dark);
+      cursor: pointer;
+      transition: all 0.2s ease;
+      width: 0.3rem;
+      height: 0.3rem;
+    }
+
+    .scene-selector .scene-title {
+      display: flex;
+      font-size: 0.24rem;
+      margin-bottom: 0.1rem;
+      min-width: 0.8rem;
+    }
+
+    .scene-selector .scene-list li.add-btn {
+      display: flex;
+      align-items: center;
+      background: #373b3e;
+    }
+
+    .scene-selector .scene-list li.add-btn i {
+      position: static;
+      margin-right: 0.05rem;
+    }
+
+    .scene-selector .scene-list.user-scene {
+      display: contents;
+    }
+
+    .message-bubble {
+      position: relative;
+      width: 100%;
+      padding: 0;
+      border-radius: 0.1rem;
+      margin: 0.1rem 0;
+      font-size: 0.28rem;
+      line-height: 1.4;
+      box-shadow: 0 0.02rem 0.05rem rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    .message-bubble.loading {
+      opacity: 0.7;
+      animation: pulse 1.5s infinite;
+    }
+
+    @keyframes pulse {
+      0% {
+        opacity: 0.7;
+      }
+
+      50% {
+        opacity: 0.4;
+      }
+
+      100% {
+        opacity: 0.7;
+      }
+    }
+
+    .ai-message {
+      align-self: flex-start;
+      background-color: var(--ai-bubble);
+      color: #675843;
+      border-top-left-radius: 0.1rem;
+    }
+
+    .user-message {
+      align-self: flex-end;
+      background-color: var(--user-bubble);
+      border-top-right-radius: 0.1rem;
+      color: #675843;
+    }
+
+    .message-content {
+      padding: 0.4rem;
+    }
+
+    .avatar-box {
+      position: absolute;
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      margin-top: -0.15rem;
+      align-items: flex-end;
+    }
+
+    .avatar-box .avatar {
+      width: 0.9rem;
+      height: 0.9rem;
+      border-radius: 10%;
+      background: #fff;
+      padding: 0.08rem;
+    }
+
+    .avatar-box button {
+      background: #dacfad;
+      border: none;
+      font-size: 0.25rem;
+      padding: 0.15rem 0.28rem;
+      border-radius: 0.1rem;
+      line-height: 1;
+      color: #675843;
+    }
+
+    .avatar-box button.fanyi-btn {
+      color: #ffffff;
+      background-color: #74644d;
+    }
+
+
+    .avatar-box button img {
+      height: 0.22rem;
+      margin-right: 0.1rem;
+      vertical-align: middle;
+    }
+
+    .user-message .avatar-box {
+      padding-right: 0.15rem;
+    }
+
+    .ai-message .avatar-box {
+      padding-left: 0.15rem;
+    }
+
+    .input-area {
+      display: flex;
+      align-items: center;
+      padding: 0.2rem 0.4rem;
+      border-top: 1px solid var(--border);
+      height: 1rem;
+    }
+
+    .text-input {
+      flex: 1;
+      height: 0.6rem;
+      border: 1px solid var(--border);
+      padding: 0 0.2rem;
+      font-size: 0.28rem;
+      margin: 0 0.15rem;
+      background-color: #eaf6f9;
+      padding-right: 0.8rem;
+    }
+
+    .text-input.btn{
+       padding-right: 0;
+    }
+
+    .input-btn {
+      padding: 0;
+      width: 0.44rem;
+      height: 0.44rem;
+      border: none;
+      background: none;
+      cursor: pointer;
+      color: var(--text-dark);
+      font-size: 0.3rem;
+      transition: color 0.2s ease;
+    }
+
+    .input-btn img {
+      width: 100%;
+      height: 100%;
+    }
+
+    #torating-btn {
+      font-size: 0.25rem;
+      width: auto;
+      background-color: #ccbe91;
+      height: 0.6rem;
+      padding: 0 0.2rem;
+      color: #000000;
+      border-radius: 0.1rem;
+    }
+
+    .send-btn {
+      position: absolute;
+      color: var(--primary);
+      width: 0.44rem;
+      height: 0.44rem;
+      right: 0.3rem;
+      top: 0.08rem;
+    }
+
+    #keyboard-btn {
+      padding: 0;
+    }
+
+    #keyboard-btn i {
+      display: flex;
+      background-size: 100%;
+      width: 100%;
+      height: 100%;
+      background-repeat: no-repeat;
+      background-position-y: center;
+    }
+
+    #keyboard-btn i.microphone {
+      background-image: url("./style/img/68a15d6d58cb8da5c82966ed.png");
+    }
+
+    #keyboard-btn i.keyboard {
+      background-image: url("./style/img/68a13ffb58cb8da5c828b9fd.png");
+    }
+
+    .notification {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 10px 20px;
+      border-radius: 4px;
+      color: white;
+      z-index: 1000;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      font-size: 0.28rem;
+    }
+
+    .notification.info {
+      background-color: #3498db;
+    }
+
+    .notification.success {
+      background-color: #2ecc71;
+    }
+
+    .notification.error {
+      background-color: #e74c3c;
+    }
+
+    /* 历史记录侧边栏样式 */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      display: none;
+    }
+
+    .history-sidebar {
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 320px;
+      height: 100%;
+      background: white;
+      z-index: 1001;
+      transform: translateX(100%);
+      transition: transform 0.3s ease;
+      box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .history-sidebar.open {
+      transform: translateX(0);
+    }
+
+    .sidebar-header {
+      padding: 16px;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .sidebar-header h3 {
+      margin: 0;
+      font-size: 0.28rem;
+    }
+
+    .close-sidebar {
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      padding: 0 8px;
+    }
+
+    .history-list {
+      padding: 16px;
+      overflow-y: auto;
+      height: calc(100% - 60px);
+    }
+
+    .history-item {
+      position: relative;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      background-color: #f5f5f5;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+
+    .history-item:hover {
+      background-color: #e9e9e9;
+    }
+
+    .history-item .close {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 16px;
+    }
+
+    .history-item-time {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 4px;
+    }
+
+    .empty-history {
+      text-align: center;
+      padding: 20px;
+      color: #888;
+      font-style: italic;
+      font-size: 0.28rem;
+    }
+
+    .history-item-content {
+      font-size: 0.28rem;
+    }
+
+    .app-translation {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .waveform-canvas {
+      width: 100%;
+      height: 0.6rem;
+      padding: 0;
+      margin: 0 0.15rem;
+    }
+
+    .text-input-container,
+    .voice-input-container {
+      position: relative;
+      display: flex;
+      flex: 1;
+    }
+
+    #voice-input-btn {
+      display: flex;
+      flex: 1;
+      user-select: none;
+      -webkit-user-select: none;
+      -ms-user-select: none;
+      background-color: #f0f0f0;
+    }
+    #voice-input-btn.disabled {
+      cursor: not-allowed;
+      /* 禁止点击 */
+      pointer-events: none;
+    }
+    #voice-input-btn .waveform-canvas {
+      display: none;
+      background-color: #ded4b6;
+    }
+
+    #voiceInputBtnBox {
+      background-color: #ded4b6;
+    }
+
+    .play-btn {
+      display: flex;
+      align-items: center;
+      padding: 0.22rem 0.4rem;
+      background: #ffffff;
+      border-radius: 0.05rem 0.05rem 0 0;
+    }
+
+    .play-1 {
+      width: 0.5rem;
+      margin-right: 0.2rem;
+    }
+
+    .play-2 {
+      height: 0.32rem;
+    }
+
+    .modal-content {
+      position: relative;
+      border-radius: 0.1rem;
+      background-color: var(--bg-light);
+    }
+
+    .modal-close {
+
+      position: absolute;
+      background: #373b3e;
+      border: none;
+      border-radius: 50%;
+      padding: 0;
+      width: 0.5rem;
+      height: 0.5rem;
+      right: -0.2rem;
+      top: -0.2rem;
+      z-index: 10;
+    }
+
+    .modal-body {
+      padding: 0.3rem;
+      line-height: 1.2;
+      max-height: 8rem;
+      overflow-y: auto;
+    }
+
+    .org-text {
+      margin-bottom: 0.1rem;
+    }
+
+    .cor-text {
+      background: #ffffff;
+      padding: 0.2rem;
+    }
+
+    .cor-text p:nth-child(1) {
+      margin-bottom: 0.1rem;
+    }
+    /* loading */
+    .loading{
+      width: 0.4rem;
+      height: 0.4rem;
+      border-radius: 50%;
+      border: 0.1rem solid #ccc;
+      border-top-color: #333;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+    @keyframes spin {
+      to {
+        transform: rotate(360deg);
+      } 
+      0% {
+        transform: rotate(0deg);
+      }
+      50% {
+        transform: rotate(180deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app-translation">
+    <div class="header-bar">
+      <button class="header-btn" id="history-btn">
+        <img src="./style/img/68a13fe558cb8da5c828b9fa.png" alt="">
+        <p>历史对话</p>
+      </button>
+      <button class="header-btn" id="new-conversation-btn">
+        <img src="./style/img/68a1412358cb8da5c828bfaa.png" alt="">
+        <p>新建对话</p>
+      </button>
+    </div>
+    <div class="conversation-container-wrapper">
+      <div class="conversation-container" id="conversation-container">
+        <!-- 示例对话 -->
+      </div>
+      <!-- 场景选择 -->
+      <div class="scene-selector">
+        <div>
+          <span class="scene-title">场景：</span>
+          <ul class="scene-list">
+            <li>雅思
+            </li>
+            <li>面试</li>
+            <li>餐厅点餐</li>
+            <li>校园</li>
+            <li>安检</li>
+            <li>购物</li>
+            <!-- 自动定义场景 -->
+            <ul class="scene-list user-scene" id="userScene"></ul>
+            <li class="add-btn" id="sceneCreateBtn"><i class="fas fa-plus"></i> 创建场景</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="input-area">
+      <button class="input-btn" id="keyboard-btn">
+        <i class="keyboard"></i>
+      </button>
+      <div id="text-input-container" class="text-input-container">
+        <input type="text" class="text-input" id="message-input" placeholder="输入你的问题..." />
+        <button class="input-btn send-btn" id="send-btn">
+          <img src="./style/img/68a13fe558cb8da5c828b9f9.png" alt="">
+        </button>
+      </div>
+      <div id="voice-input-container" class="voice-input-container" style="display: none">
+        <div id="voice-input-btn">
+          <button class="text-input btn" id="voiceInputBtnBox">按住 说话</button>
+          <canvas class="waveform-canvas" id="waveformCanvas"></canvas>
+        </div>
+      </div>
+      <button class="input-btn" id="torating-btn">
+        去评分
+      </button>
+    </div>
+  </div>
+
+  <!-- 历史记录侧边栏 -->
+  <div class="sidebar-overlay"></div>
+  <div class="history-sidebar">
+    <div class="sidebar-header">
+      <h3>历史记录</h3>
+      <button class="close-sidebar">&times;</button>
+    </div>
+    <div class="history-list"></div>
+  </div>
+  <!-- 场景角色选择 -->
+  <div class="modal fade" id="sceneRoleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+    data-bs-backdrop="static" data-bs-keyboard="false" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <!-- 关闭按钮 -->
+        <button type="button" class="modal-close" data-bs-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true" style="color: #fff;">&times;</span>
+        </button>
+
+        <div class="modal-body">
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <audio src="" id="audioPlayer" style="display: none;"></audio>
+</body>
+<script src="./style/translation.js"></script>
+
+</html>

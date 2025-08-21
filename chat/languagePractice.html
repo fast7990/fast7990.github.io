@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>极简翻译器 | Minimalist Translator</title>
+    <link
+      href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link href="./style/css/common.css" rel="stylesheet" />
+    <link href="./style/css/tailwindcss.css" rel="stylesheet" />
+    <script src="./style/rem.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+    <style>
+      :root {
+        --primary: #2c3e50;
+        --secondary: #7f8c8d;
+        --accent: #3498db;
+        --bg: #f9f9f9;
+        --card: #ffffff;
+        --text: #333333;
+        --border: #e0e0e0;
+      }
+
+      body {
+        font-family: "Helvetica Neue", Arial, sans-serif;
+        background-color: var(--bg);
+        color: var(--text);
+        line-height: 1.6;
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+      }
+
+      .container {
+        margin: 0 auto;
+        padding: 0.08rem;
+        flex: 1;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 0.08rem;
+      }
+
+      .header h1 {
+        font-weight: 300;
+        color: var(--primary);
+        margin-bottom: 0.2rem;
+        letter-spacing: 1px;
+        font-size: 0.36rem;
+      }
+
+      .header p {
+        color: var(--secondary);
+        font-size: 0.28rem;
+      }
+
+      .translator-card {
+        border-radius: 8px;
+        overflow: hidden;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        padding: 0.1rem;
+      }
+
+      .language-selector {
+        display: flex;
+        justify-content: space-between;
+        padding: 0.04rem 0.04rem 0;
+        background-color: var(--card);
+      }
+
+      .select-wrapper {
+        display: flex;
+        align-items: center;
+        position: relative;
+        flex: 1;
+        margin: 0 0.02rem;
+      }
+
+      .select-wrapper:first-child {
+        margin-left: 0;
+      }
+
+      .select-wrapper:last-child {
+        margin-right: 0;
+      }
+
+      select {
+        width: 100%;
+        padding: 0.03rem 0.08rem 0.03rem 0.04rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        appearance: none;
+        background-color: var(--card);
+        color: var(--primary);
+        font-size: 0.28rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+      }
+
+      select:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+      }
+
+      .select-arrow {
+        position: absolute;
+        right: 0.4rem;
+        top: 50%;
+        transform: translateY(-50%);
+        color: var(--secondary);
+        pointer-events: none;
+      }
+
+      .swap-btn {
+        background-color: var(--accent);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin: 0 auto;
+      }
+
+      .text-area-container {
+        position: relative;
+        padding: 0.1rem 0;
+      }
+
+      .text-area-container:first-child {
+        border-bottom: 1px solid var(--border);
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 150px;
+        padding: 0.1rem;
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        resize: none;
+        font-size: 0.28rem;
+        color: var(--text);
+        transition: all 0.3s ease;
+      }
+
+      textarea:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px rgba(52, 152, 219, 0.2);
+      }
+
+      .toolbar {
+        position: absolute;
+        top: 0.2rem;
+        right: 0.1rem;
+        display: flex;
+        gap: 0.2rem;
+      }
+
+      .tool-btn {
+        background-color: rgba(255, 255, 255, 0.9);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: var(--secondary);
+        transition: all 0.2s ease;
+      }
+
+      .tool-btn:hover {
+        color: var(--accent);
+        border-color: var(--accent);
+        background-color: rgba(52, 152, 219, 0.1);
+      }
+
+      .footer {
+        text-align: center;
+        padding: 1rem;
+        color: var(--secondary);
+        font-size: 0.32rem;
+        margin-top: 0.8rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>极简翻译器</h1>
+        <p>Minimalist Translator · 简洁高效的语言转换工具</p>
+      </div>
+
+      <div class="translator-card">
+        <div class="language-selector">
+          <div class="select-wrapper">
+            <select id="source-language">
+              <option value="zh">中文</option>
+              <option value="en">English</option>
+              <option value="ja">日本語</option>
+              <option value="ko">한국어</option>
+              <option value="fr">Français</option>
+              <option value="de">Deutsch</option>
+              <option value="es">Español</option>
+            </select>
+            <div class="select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+        <div class="text-area-container">
+          <textarea
+            id="source-text"
+            placeholder="输入要翻译的文本..."
+          ></textarea>
+          <div class="toolbar">
+            <button class="tool-btn" id="voice-input">
+              <i class="fas fa-microphone"></i>
+            </button>
+            <button class="tool-btn" id="upload-image">
+              <i class="fas fa-image"></i>
+            </button>
+          </div>
+        </div>
+        <div class="btn-area-container">
+          <button class="swap-btn" id="swap-languages">
+            <i class="fas fa-exchange-alt"></i>
+          </button>
+        </div>
+        <div class="language-selector">
+          <div class="select-wrapper">
+            <select id="target-language">
+              <option value="en" selected>English</option>
+              <option value="zh">中文</option>
+              <option value="ja">日本語</option>
+              <option value="ko">한국어</option>
+              <option value="fr">Français</option>
+              <option value="de">Deutsch</option>
+              <option value="es">Español</option>
+            </select>
+            <div class="select-arrow">
+              <i class="fas fa-chevron-down"></i>
+            </div>
+          </div>
+        </div>
+        <div class="text-area-container">
+          <textarea
+            id="target-text"
+            placeholder="翻译结果将显示在这里..."
+            readonly
+          ></textarea>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <p>© 2025 Minimalist Translator · 极简设计 · 极致体验</p>
+    </div>
+  </body>
+  <script>
+    $(document).ready(function () {
+      // 缓存DOM元素
+      const $sourceText = $("#source-text");
+      const $targetText = $("#target-text");
+      const $sourceLanguage = $("#source-language");
+      const $targetLanguage = $("#target-language");
+      const $swapBtn = $("#swap-languages");
+      const $voiceBtn = $("#voice-input");
+      const $imageBtn = $("#upload-image");
+
+      // 语言切换功能
+      $swapBtn.on("click", function () {
+        const tempLang = $sourceLanguage.val();
+        $sourceLanguage.val($targetLanguage.val());
+        $targetLanguage.val(tempLang);
+
+        // 交换文本
+        const tempText = $sourceText.val();
+        $sourceText.val($targetText.val());
+        $targetText.val(tempText);
+      });
+
+      // 输入框变化时触发翻译 (实际应用中这里应该调用翻译API)
+      $sourceText.on("input", function () {
+        // 这里只是模拟翻译效果
+        const text = $(this).val();
+        console.log(
+          "翻译前的文本:",
+          text,
+          "语言：",
+          $sourceLanguage.val(),
+          $targetLanguage.val()
+        );
+        if (text) {
+          $targetText.val(`${translateText(text)}`);
+        } else {
+          $targetText.val("");
+        }
+      });
+      function translateText(text) {
+        return "翻译结果" + text;
+      }
+      // 语音输入按钮
+      $voiceBtn.on("click", function () {
+        alert("语音输入功能 (实际应用中这里会调用Web Speech API)");
+        $(this).find("i").toggleClass("fa-microphone fa-microphone-slash");
+      });
+
+      // 图片上传按钮
+      $imageBtn.on("click", function () {
+        alert("图片上传功能 (实际应用中这里会处理图片上传和OCR识别)");
+      });
+
+      // 语言选择变化时也触发翻译
+      $sourceLanguage.add($targetLanguage).on("change", function () {
+        console.log("语言选择变化时触发翻译");
+        $sourceText.trigger("input");
+      });
+
+      // 优化性能：使用事件委托处理动态元素
+      $(document)
+        .on("focus", "textarea", function () {
+          $(this).css("border-color", "var(--accent)");
+        })
+        .on("blur", "textarea", function () {
+          $(this).css("border-color", "var(--border)");
+        });
+    });
+  </script>
+</html>

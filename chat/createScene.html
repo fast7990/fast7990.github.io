@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="touch-action" content="none">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>创建场景</title>
+    <link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-100-M/font-awesome/6.0.0/css/all.min.css"
+        rel="stylesheet" />
+    <link href="./style/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="./style/css/common.css?s=1694500000000" rel="stylesheet" />
+    <script src="./style/jquery.min.js"></script>
+    <script src="./style/layui.mobile.js"></script>
+    <script src="./style/rem.js"></script>
+    <script src="./style/getParams.js"></script>
+    <script src="./style/baseConfig.js"></script>
+    <style>
+        body {
+            background-color: var(--bg-light);
+            font-family: "Helvetica Neue", Arial, sans-serif;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0;
+        }
+
+        .header-bar {
+            display: flex;
+            align-items: center;
+            padding: 0.3rem 0.4rem;
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: none;
+            border: none;
+            color: var(--text-dark);
+            font-size: 0.32rem;
+            cursor: pointer;
+            padding: 0.1rem;
+            margin-right: 0.2rem;
+        }
+
+        .header-title {
+            font-size: 0.36rem;
+            color: var(--text-dark);
+            font-weight: 500;
+        }
+
+        .content-container {
+            flex: 1;
+            padding: 0.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .form-group {
+            background-color: #ffffff;
+            border-radius: 0.1rem;
+            padding: 0.3rem;
+            box-shadow: 0 0.02rem 0.05rem rgba(0, 0, 0, 0.1);
+        }
+
+        .form-label {
+            display: block;
+            font-size: 0.28rem;
+            color: var(--text-dark);
+            margin-bottom: 0.15rem;
+            font-weight: 500;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.2rem;
+            border: 1px solid var(--border);
+            border-radius: 0.05rem;
+            font-size: 0.28rem;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-textarea {
+            width: 100%;
+            min-height: 2rem;
+            padding: 0.2rem;
+            border: 1px solid var(--border);
+            border-radius: 0.05rem;
+            font-size: 0.28rem;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            resize: vertical;
+            font-family: inherit;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .create-btn-container {
+            margin-top: auto;
+            padding: 0.4rem;
+        }
+
+        .create-btn {
+            width: 100%;
+            padding: 0.25rem;
+            background-color: #b9ae83;
+            color: white;
+            border: none;
+            border-radius: 0.1rem;
+            font-size: 0.32rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            box-shadow: 0 0.02rem 0.05rem rgba(0, 0, 0, 0.1);
+        }
+
+        .create-btn:hover {
+            background-color: #b9ae83
+        }
+
+        .create-btn:active {
+            transform: translateY(0.01rem);
+            box-shadow: 0 0.01rem 0.03rem rgba(0, 0, 0, 0.1);
+        }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.24rem;
+            color: var(--text-light);
+            margin-top: 0.1rem;
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: var(--text-light);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header-bar">
+        <button class="back-btn" onclick="goBack()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="header-title">创建场景</div>
+    </div>
+
+    <div class="content-container">
+        <div class="form-group">
+            <label class="form-label" for="sceneTitle">场景标题</label>
+            <input type="text" id="sceneTitle" class="form-input" placeholder="请输入场景标题" maxlength="50"
+                oninput="updateCharCount('title')">
+            <div class="char-count">
+                <span id="titleCount">0</span>/50
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label" for="sceneDescription">场景描述</label>
+            <textarea id="sceneDescription" class="form-textarea" placeholder="请详细描述这个场景的内容和用途" maxlength="500"
+                oninput="updateCharCount('description')"></textarea>
+            <div class="char-count">
+                <span id="descriptionCount">0</span>/500
+            </div>
+        </div>
+    </div>
+
+    <div class="create-btn-container">
+        <button class="create-btn" onclick="createScene()">
+            <i class="fas fa-plus"></i> 确定创建
+        </button>
+    </div>
+
+    <script>
+        // 返回上一页
+        function goBack() {
+            window.location.href = "index.html";
+        }
+
+        // 更新字符计数
+        function updateCharCount(type) {
+            if (type === 'title') {
+                const titleInput = document.getElementById('sceneTitle');
+                const titleCount = document.getElementById('titleCount');
+                titleCount.textContent = titleInput.value.length;
+            } else if (type === 'description') {
+                const descInput = document.getElementById('sceneDescription');
+                const descCount = document.getElementById('descriptionCount');
+                descCount.textContent = descInput.value.length;
+            }
+        }
+
+        // 创建场景
+        async function createScene() {
+            const title = document.getElementById('sceneTitle').value.trim();
+            const description = document.getElementById('sceneDescription').value.trim();
+
+            if (!title) {
+                alert('请输入场景标题');
+                return;
+            }
+
+            if (!description) {
+                alert('请输入场景描述');
+                return;
+            }
+
+            // 这里可以添加实际的创建场景逻辑
+            // 例如：发送到服务器或保存到本地存储
+            const sceneData = {
+                userId: getUserId(),
+                changjing: title,
+                description: description,
+            };
+
+            try {
+                const response = await $.ajax({
+                    url: CONFIG.baseURL + "/addSituation",
+                    method: "POST",
+                    contentType: "application/json",
+                    dataType: "json",
+                    data: JSON.stringify(sceneData),
+                });
+
+                if (response.code != 0) {
+                    throw new Error(response.msg);
+                }
+                showNotification("场景创建成功！", "success");
+                // 清空表单
+                document.getElementById('sceneTitle').value = '';
+                document.getElementById('sceneDescription').value = '';
+                document.getElementById('titleCount').textContent = '0';
+                document.getElementById('descriptionCount').textContent = '0';
+
+                // 返回上一页或跳转到场景列表
+                setTimeout(() => {
+                    goBack();
+                }, 1000);
+            } catch (error) {
+                console.error('创建场景失败:', error);
+                showNotification('创建场景失败，请稍后重试', "error");
+            }
+        }
+
+    </script>
+</body>
+
+</html>

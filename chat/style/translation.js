@@ -407,7 +407,8 @@ $(document).ready(function () {
     let messages = getMessages();
     let message = messages.find((item) => item.id == id);
     // 检查音频URL是否存在
-    if (!message.quVoiceUrl && !message.anVoiceUrl) {
+    if (!message || !message.quVoiceurl && !message.anVoiceurl) {
+      showNotification("播放失败，请稍后重试", "error");
       console.error("音频URL不存在");
       return;
     }
@@ -420,9 +421,9 @@ $(document).ready(function () {
     audioContext.pause();
     let url = "";
     if (type == "user") {
-      url = message.quVoiceUrl;
+      url = message.quVoiceurl;
     } else {
-      url = message.anVoiceUrl;
+      url = message.anVoiceurl;
     }
     try {
       audioContext.src = url;
@@ -430,7 +431,7 @@ $(document).ready(function () {
       audioContext
         .play()
         .then(() => {
-          console.log("音频播放成功");
+          console.log("音频播放成功",url);
         })
         .catch((err) => {
           console.error("音频播放失败:", err);
@@ -757,8 +758,8 @@ $(document).ready(function () {
       title: originalMessage,
       userMessage: originalMessage,
       aiReply: text,
-      anVoiceUrl: aiReply.answerVoice,
-      quVoiceUrl: aiReply.orgVoiceUrl || "",
+      anVoiceurl: aiReply.answerVoice,
+      quVoiceurl: aiReply.orgVoiceUrl || "",
     };
     let messages = getMessages();
     messages.push(message);
@@ -951,12 +952,13 @@ $(document).ready(function () {
       // 清空当前对话并加载历史对话
       $conversation.empty();
       item.forEach((item) => {
-        $conversation.append(
-          `<div class="message-bubble user-message" data-user-id="${item.id}">
-            <p class="play-btn" data-id="${item.id}" data-type="user">
+        let str = `<p class="play-btn" data-id="${item.id}" data-type="user">
               <img class="play-1" src="./style/img/68a1809958cb8da5c82a1fbd.png" alt="">
               <img class="play-2" src="./style/img/68a1809958cb8da5c82a1fbe.png" alt="">
-            </p>
+            </p>`
+        $conversation.append(
+          `<div class="message-bubble user-message" data-user-id="${item.id}">
+            ${item.question?'':str}
             <p class="message-content">${escapeHtml(item.userMessage)}</p>
             <div class="avatar-box">
               <span>

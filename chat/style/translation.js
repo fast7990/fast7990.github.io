@@ -54,9 +54,8 @@ $(document).ready(function () {
   }
   function getHistoryFn() {
     getHistory().then((res) => {
-      console.log(res,"===asdasd");
+      console.log(res, "===asdasd");
       if (res.code == 0) {
-
         let historyList = JSON.parse(res.data.historyList) || [];
         let messages = historyList.map((item) => {
           return {
@@ -66,7 +65,7 @@ $(document).ready(function () {
             aiReply: item.answer,
           };
         });
-        console.log(cid,messages,'====aa');
+        console.log(cid, messages, "====aa");
         selectHistory(cid, messages);
       }
     });
@@ -392,9 +391,9 @@ $(document).ready(function () {
       const id = $(this).data("id");
       const type = $(this).data("type");
       if (type == "user") {
-        playAudio(id, "user");
+        playAudio(id, "user", this);
       } else {
-        playAudio(id, "ai");
+        playAudio(id, "ai", this);
       }
     });
   }
@@ -403,11 +402,11 @@ $(document).ready(function () {
    * @param {string} id - 音频ID
    * @param {string} type - 音频类型（user/ai）
    */
-  async function playAudio(id, type) {
+  async function playAudio(id, type, that) {
     let messages = getMessages();
     let message = messages.find((item) => item.id == id);
     // 检查音频URL是否存在
-    if (!message || !message.quVoiceurl && !message.anVoiceurl) {
+    if (!message || (!message.quVoiceurl && !message.anVoiceurl)) {
       showNotification("播放失败，请稍后重试", "error");
       console.error("音频URL不存在");
       return;
@@ -417,6 +416,8 @@ $(document).ready(function () {
       console.error("音频上下文未初始化");
       return;
     }
+    // 切换播放按钮状态
+    $(".play-1").removeClass("playing");
     // 停止当前播放
     audioContext.pause();
     let url = "";
@@ -431,11 +432,25 @@ $(document).ready(function () {
       audioContext
         .play()
         .then(() => {
-          console.log("音频播放成功",url);
+          // 切换播放按钮状态
+          $(that).find(".play-1").addClass("playing");
+          console.log("音频播放成功", url);
+          addLog({
+            userId: getUserId(),
+            sendResult: {
+              userId: "play",
+              playurl: url,
+            },
+          });
         })
         .catch((err) => {
+          $(".play-1").removeClass("playing");
           console.error("音频播放失败:", err);
         });
+      // 播放完成
+      audioContext.addEventListener("ended", () => {
+        $(that).find(".play-1").removeClass("playing");
+      });
     } catch (err) {
       console.error(`Unable to fetch the audio file. Error: ${err.message}`);
     }
@@ -643,7 +658,7 @@ $(document).ready(function () {
       $conversation.append(
         `<div class="message-bubble user-message" data-user-id="${id}">
            <p class="play-btn" data-id="${id}" data-type="user">
-            <img class="play-1" src="./style/img/68a1809958cb8da5c82a1fbd.png" alt="">
+            <span class="play-1"></span>
             <img class="play-2" src="./style/img/68a1809958cb8da5c82a1fbe.png" alt="">
            </p>
             <div class="avatar-box">
@@ -815,7 +830,7 @@ $(document).ready(function () {
     // }, typeSpeed);
     $element.append(`
             <p class="play-btn" data-id="${id}" data-type="ai">
-              <img class="play-1" src="./style/img/68a1809958cb8da5c82a1fbd.png" alt="">
+              <span class="play-1"></span>
               <img class="play-2" src="./style/img/68a1809958cb8da5c82a1fbe.png" alt="">
             </p>
             <p class="message-content">${escapeHtml(text)}</p>
@@ -953,12 +968,12 @@ $(document).ready(function () {
       $conversation.empty();
       item.forEach((item) => {
         let str = `<p class="play-btn" data-id="${item.id}" data-type="user">
-              <img class="play-1" src="./style/img/68a1809958cb8da5c82a1fbd.png" alt="">
+              <span class="play-1"></span>
               <img class="play-2" src="./style/img/68a1809958cb8da5c82a1fbe.png" alt="">
-            </p>`
+            </p>`;
         $conversation.append(
           `<div class="message-bubble user-message" data-user-id="${item.id}">
-            ${item.question?'':str}
+            ${item.question ? "" : str}
             <p class="message-content">${escapeHtml(item.userMessage)}</p>
             <div class="avatar-box">
               <span>
@@ -977,7 +992,7 @@ $(document).ready(function () {
         $conversation.append(
           `<div class="message-bubble ai-message" data-ai-id="${item.id}">
            <p class="play-btn" data-id="${item.id}" data-type="ai">
-            <img class="play-1" src="./style/img/68a1809958cb8da5c82a1fbd.png" alt="">
+            <span class="play-1"></span>
             <img class="play-2" src="./style/img/68a1809958cb8da5c82a1fbe.png" alt="">
            </p>
             <p class="message-content">${escapeHtml(item.aiReply)}</p>
@@ -1041,5 +1056,26 @@ $(document).ready(function () {
       console.error("获取场景失败:", error);
       throw error;
     }
+  }
+
+  // 上报日志接口addLog
+  async function addLog(data) {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: CONFIG.baseURL + "/addLog",
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify(data),
+        success: function (response) {
+          console.log(response);
+          resolve(response);
+        },
+        error: function (xhr, status, error) {
+          console.error("获取消息失败:", error);
+          reject(error);
+        },
+      });
+    });
   }
 });

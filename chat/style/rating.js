@@ -32,7 +32,9 @@ function downloadQrcode() {
   });
   addLog({
     userId: getUserId(),
-    sendResult: "share",
+    sendResult: {
+      userId: "share",
+    },
   });
 }
 

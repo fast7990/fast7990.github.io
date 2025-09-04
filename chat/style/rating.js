@@ -2,7 +2,7 @@
  * @Author: fast7990 immengxingchen@qq.com
  * @Date: 2025-08-06 21:37:30
  * @LastEditors: fast7990 immengxingchen@qq.com
- * @LastEditTime: 2025-08-19 22:43:30
+ * @LastEditTime: 2025-08-24 10:26:14
  * @FilePath: \chath5\style\rating.js
  * @Description: 这是默认设置,请设置`customMade`, 打开koroFileHeader查看配置 进行设置: https://github.com/OBKoro1/koro1FileHeader/wiki/%E9%85%8D%E7%BD%AE
  */
@@ -17,7 +17,13 @@ $(document).ready(function () {
     // 下载二维码图片
     downloadQrcode();
   });
+  bindBackBtn();
 });
+function bindBackBtn(){
+  $(".back").click(function () {
+    window.history.back();
+  });
+}
 function downloadQrcode() {
   // 将 $("#share-box")的dom转化为图片下载
   html2canvas($("#share-box")[0]).then(function (canvas) {

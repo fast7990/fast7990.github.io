@@ -25,12 +25,11 @@ $(document).ready(function () {
   const audioContext = $("#audioPlayer")[0];
 
   // 应用状态管理
-  let cid = "BAQSXClB1awvlaN02rYpYlKK"; // 对话ID
+  let cid = getCid(); // 对话ID
   let isVoiceMode = false; // 语音模式开关
   let condition = "";
   let avatar = "./style/img/68a1949b58cb8da5c82a6538.png";
   let robotimg = "./style/img/68a13fe558cb8da5c828b9f7.png";
-  let isFirst = 0;
   initApp();
   /**
    * 应用初始化入口函数
@@ -40,20 +39,43 @@ $(document).ready(function () {
     initLocalStorage(); // 初始化本地存储
     bindEventListeners(); // 绑定所有事件监听器
     getSceneName();
-    if (localStorage.getItem("isFirst")) {
-      isFirst = 1;
-    }
   }
   /**
    * 初始化本地存储
    * 恢复上次对话ID并加载对应历史记录
    */
   function initLocalStorage() {
-    getHistoryFn();
+    getHistoryFn(getCid());
     getSituationFn();
   }
-  function getHistoryFn() {
-    getHistory().then((res) => {
+  // 获取历史记录列表
+  function getHistoryList() {
+    return new Promise((resolve, reject) => {
+      $.ajax({
+        url: CONFIG.baseURL + "/historyList",
+        method: "POST",
+        dataType: "json",
+        contentType: "application/json",
+        data: JSON.stringify({
+          userId: getUserId(),
+        }),
+        success: function (res) {
+          if (res.code == 0) {
+            resolve(JSON.parse(res.data.historyList) || []);
+          } else {
+            resolve([]);
+          }
+        },
+        error: function (xhr, status, error) {
+          console.error("获取消息失败:", error);
+          reject(error);
+        },
+      });
+    });
+  }
+  // 获取历史记录
+  function getHistoryFn(cid) {
+    getHistory(cid).then((res) => {
       console.log(res, "===asdasd");
       if (res.code == 0) {
         let historyList = JSON.parse(res.data.historyList) || [];
@@ -74,14 +96,13 @@ $(document).ready(function () {
   function getSituationFn() {
     // 获取场景角色
     getSituation().then((res) => {
-      console.log(res, "====");
       if (res && res.changList) {
         let resChangeList = JSON.parse(res.changList) || [];
         let userScene = $("#userScene");
         userScene.empty();
         resChangeList.forEach((item) => {
           let li = $("<li>").text(item.changjing);
-          let closeBtn = $("<img>").addClass("close-btn");
+          let closeBtn = $("<img>").addClass("close-btn hide");
           closeBtn.attr("src", "./style/img/close.png");
           li.append(closeBtn);
           userScene.append(li);
@@ -128,7 +149,7 @@ $(document).ready(function () {
    * @returns {string} 历史记录字符串
    */
 
-  async function getHistory() {
+  async function getHistory(cid) {
     return new Promise((resolve, reject) => {
       $.ajax({
         url: CONFIG.baseURL + "/history",
@@ -137,11 +158,9 @@ $(document).ready(function () {
         contentType: "application/json",
         data: JSON.stringify({
           userId: getUserId(),
+          isFirst: cid,
           // Time: new Date().getTime(),
         }),
-        params: {
-          userId: getUserId(),
-        },
         success: function (response) {
           console.log(response);
           resolve(response);
@@ -175,13 +194,12 @@ $(document).ready(function () {
 
   function bindCorrectionBtn() {
     $("body").on("click", function (e) {
-      console.log(e.target);
       let className = e.target.className;
       let id = $(e.target).attr("data-id");
       let context = $(
         "[data-user-id=" + id + "].user-message .message-content"
       ).text();
-      console.log(context);
+      console.log("click", context);
       if (className == "correction-btn") {
         $sceneRoleModal.modal("hide");
         correctTextFn(context, id).then((res) => {
@@ -221,11 +239,6 @@ $(document).ready(function () {
         let cont = $(
           "[data-ai-id=" + id + "].ai-message .message-content"
         ).text();
-        console.log(
-          cont,
-          "[data-ai-id=" + id + "].ai-message .message-content",
-          "=====asd"
-        );
         $sceneRoleModal.find(".modal-body").html(`<div>
             <div class="org-text">
               翻译结果：
@@ -250,6 +263,7 @@ $(document).ready(function () {
           }
         });
       }
+      $(".close-btn").removeClass("show").addClass("hide");
     });
   }
 
@@ -343,15 +357,64 @@ $(document).ready(function () {
   }
 
   function bindSceneSelect() {
+    //清除之前的绑定事件
+    $(".scene-selector .scene-list li").off("click");
+
     $(".scene-selector .scene-list li").on("click", function (e) {
       e.stopPropagation();
       // 若id为sceneCreateBtn退出
       if ($(this).attr("id") == "sceneCreateBtn") {
         return;
       }
+      $(".scene-selector .scene-list li .close-btn")
+        .removeClass("show")
+        .addClass("hide");
+      const target = $(this);
+      if (!target.hasClass("add-btn")) {
+        target.find(".close-btn").removeClass("hide").addClass("show");
+      }
       let sceneName = $(this).text().trim();
       setSceneName(sceneName);
     });
+
+    // // 移动端长按事件处理
+    // let longPressTimer = null;
+    // let touchStartTime = 0;
+
+    // $(".scene-selector .scene-list li").on("touchstart", function (e) {
+    //   e.stopPropagation();
+    //   touchStartTime = Date.now();
+
+    //   longPressTimer = setTimeout(() => {
+    //     console.log("长按事件发生");
+    //     // 长按事件发生
+    //     const target = $(this);
+    //     if (!target.hasClass("add-btn")) {
+    //       target.find(".close-btn").removeClass("hide").addClass("show");
+    //     }
+    //   }, 800); // 800ms长按触发时间
+    // });
+
+    // $(".scene-selector .scene-list li").on("touchend touchmove", function (e) {
+    //   if (longPressTimer) {
+    //     clearTimeout(longPressTimer);
+    //     longPressTimer = null;
+    //   }
+
+    //   // 如果移动距离过大，也取消长按
+    //   if (e.type === "touchmove") {
+    //     const touch = e.originalEvent.touches[0];
+    //     const moveDistance = Math.sqrt(
+    //       Math.pow(touch.clientX - e.originalEvent.changedTouches[0].clientX, 2) +
+    //       Math.pow(touch.clientY - e.originalEvent.changedTouches[0].clientY, 2)
+    //     );
+
+    //     if (moveDistance > 10) {
+    //       clearTimeout(longPressTimer);
+    //       longPressTimer = null;
+    //     }
+    //   }
+    // });
   }
 
   function setSceneName(sceneName) {
@@ -366,6 +429,7 @@ $(document).ready(function () {
       }
     });
   }
+
   function getSceneName() {
     condition = localStorage.getItem("condition");
     if (!condition) {
@@ -378,6 +442,7 @@ $(document).ready(function () {
   // 绑定场景创建按钮事件
   function bindSceneCreateBtn() {
     $sceneCreateBtn.on("click", function (e) {
+      console.log(e);
       window.location.href = "createScene.html";
     });
   }
@@ -526,12 +591,14 @@ $(document).ready(function () {
       // if ($sceneRoleModal.modal("show")) {
       //   $sceneRoleModal.modal("hide");
       // }
+      console.log("新建对话");
+      isFirst = 0;
       // 列表为空不创建
       if (getMessages().length === 0) {
         return;
       }
       clearConversation();
-      setCid(getCid());
+      setCid(generateSecureRandomString());
       setMessages([]);
     });
   }
@@ -659,7 +726,7 @@ $(document).ready(function () {
         `<div class="message-bubble user-message" data-user-id="${id}">
            <p class="play-btn" data-id="${id}" data-type="user">
             <span class="play-1"></span>
-            <img class="play-2" src="./style/img/68a1809958cb8da5c82a1fbe.png" alt="">
+            <span class="play-2"></span>
            </p>
             <div class="avatar-box">
               <span></span>
@@ -673,19 +740,14 @@ $(document).ready(function () {
             <p class="message-content">${escapeHtml(message)}</p>
             <div class="avatar-box">
               <span>
-                <button class="correction-btn" data-id="${id}">
-                <img src="./style/img/68a1939058cb8da5c82a64da.png" alt="">
-                纠错</button>
+                <button class="correction-btn" data-id="${id}"><img src="./style/img/jiucuo.png" alt="">纠错</button>
+                <button class="optimization-btn" data-id="${id}"><img src="./style/img/68a1939058cb8da5c82a64da.png" alt="">回答优化</button>
               </span>
               <img class="avatar" src="${avatar}" alt="">
             </div>
           </div>`
       );
     }
-  }
-  function setIsFirst() {
-    isFirst = 1;
-    localStorage.setItem("isFirst", 1);
   }
   async function getAIReply(message, file, id) {
     // 这里应该是调用AI接口的代码
@@ -699,7 +761,7 @@ $(document).ready(function () {
     let formData = new FormData();
     formData.append("userId", getUserId());
     formData.append("condition", getSceneName());
-    formData.append("isFirst", isFirst);
+    formData.append("isFirst", getCid());
     formData.append("id", id);
     if (message) {
       formData.append("content", message);
@@ -707,7 +769,6 @@ $(document).ready(function () {
       formData.append("file", file);
       formData.append("content", "");
     }
-    setIsFirst();
     // formData类型参数
     try {
       return $.ajax({
@@ -831,7 +892,7 @@ $(document).ready(function () {
     $element.append(`
             <p class="play-btn" data-id="${id}" data-type="ai">
               <span class="play-1"></span>
-              <img class="play-2" src="./style/img/68a1809958cb8da5c82a1fbe.png" alt="">
+              <span class="play-2"></span>
             </p>
             <p class="message-content">${escapeHtml(text)}</p>
             <div class="avatar-box">
@@ -879,8 +940,14 @@ $(document).ready(function () {
    * @returns {string} 当前对话ID
    */
   function getCid() {
-    // return localStorage.getItem("cid");
-    return cid;
+    let cid = localStorage.getItem("cid");
+    if (cid) {
+      return cid;
+    } else {
+      cid = generateSecureRandomString();
+      localStorage.setItem("cid", cid);
+      return cid;
+    }
   }
 
   /**
@@ -906,23 +973,23 @@ $(document).ready(function () {
    * 填充历史记录侧边栏
    * @param {string} [cid] - 可选，指定要加载的对话ID
    */
-  function loadHistory(cid) {
+  async function loadHistory(cid) {
+    let historyList = await getHistoryList();
     const $historyList = $(".history-list");
     $historyList.empty();
-    const history = JSON.parse(localStorage.getItem("chatHistory") || "{}");
 
-    if (Object.keys(history).length === 0) {
+    if (historyList.length === 0) {
       $historyList.html('<div class="empty-history">暂无历史记录</div>');
       return;
     }
 
-    Object.keys(history).forEach((key) => {
-      const item = history[key];
+    historyList.forEach((item, index) => {
+      let key = item.isFirst;
       const historyItem = `
               <div class="history-item" data-id="${key}">
-                <div class="history-item-time">${item.time}</div>
+                <div class="history-item-time">${item.quTime}</div>
                 <div class="history-item-content">${escapeHtml(
-                  item.title
+                  item.question
                 )}</div>
                 <img class="close" style="display:none;" src="https://p3.ssl.qhimg.com/t110b9a930101066b52dc0e3fe4.png" data-id="${key}"></img>
 
@@ -934,7 +1001,7 @@ $(document).ready(function () {
     // 点击历史项加载对应对话
     $(".history-item").on("click", function () {
       const id = $(this).data("id");
-      selectHistory(id);
+      getHistoryFn(id);
     });
     // 点击删除按钮删除历史记录
     $(".close").on("click", function () {
@@ -959,8 +1026,7 @@ $(document).ready(function () {
    * @param {string} id - 要加载的对话ID
    */
   function selectHistory(cid, messages) {
-    const history = JSON.parse(localStorage.getItem("chatHistory") || "{}");
-    const item = messages ? messages : history[cid].messages || [];
+    const item = messages ? messages : [];
     setMessages(item);
     setCid(cid);
     if (item) {
@@ -969,7 +1035,7 @@ $(document).ready(function () {
       item.forEach((item) => {
         let str = `<p class="play-btn" data-id="${item.id}" data-type="user">
               <span class="play-1"></span>
-              <img class="play-2" src="./style/img/68a1809958cb8da5c82a1fbe.png" alt="">
+              <span class="play-2"></span>
             </p>`;
         $conversation.append(
           `<div class="message-bubble user-message" data-user-id="${item.id}">
@@ -979,7 +1045,7 @@ $(document).ready(function () {
               <span>
                 <button class="correction-btn" data-id="${
                   item.id
-                }"><img src="./style/img/68a1939058cb8da5c82a64da.png" alt="">纠错</button>
+                }"><img src="./style/img/jiucuo.png" alt="">纠错</button>
                 <button class="optimization-btn" data-id="${
                   item.id
                 }"><img src="./style/img/68a1939058cb8da5c82a64da.png" alt="">回答优化</button>
@@ -993,7 +1059,7 @@ $(document).ready(function () {
           `<div class="message-bubble ai-message" data-ai-id="${item.id}">
            <p class="play-btn" data-id="${item.id}" data-type="ai">
             <span class="play-1"></span>
-            <img class="play-2" src="./style/img/68a1809958cb8da5c82a1fbe.png" alt="">
+            <span class="play-2"></span>
            </p>
             <p class="message-content">${escapeHtml(item.aiReply)}</p>
             <div class="avatar-box">

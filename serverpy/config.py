@@ -4,7 +4,7 @@ from typing import Dict, Any
 # 配置管理类
 class Settings:
     # 基础配置
-    PROJECT_NAME: str = "业务API服务"
+    PROJECT_NAME: str = "用户管理系统"
     PROJECT_VERSION: str = "1.0.0"
     API_V1_STR: str = "/api/v1"
     DEBUG: bool = True

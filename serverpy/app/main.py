@@ -10,7 +10,7 @@ Base.metadata.create_all(bind=engine)
 # 初始化FastAPI应用
 app = FastAPI(
     title=settings.PROJECT_NAME,
-    description="基于FastAPI的可扩展业务框架",
+    description="基于FastAPI的用户管理系统",
     version=settings.PROJECT_VERSION,
     docs_url="/docs",
     redoc_url="/redoc",
@@ -43,7 +43,9 @@ def read_root():
     return {
         "project": settings.PROJECT_NAME,
         "version": settings.PROJECT_VERSION,
-        "message": "欢迎使用FastAPI业务框架"
+        "message": "欢迎使用用户管理系统API",
+        "api_docs": "/docs",
+        "api_redoc": "/redoc"
     }
 
 # 包含API路由

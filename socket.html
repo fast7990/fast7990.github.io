@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <title>语音识别 Demo</title>
+    <style>
+        /* 自动滚动的结果框样式 */
+        #result {
+            margin-top: 20px;
+            width: 100%;
+            height: 400px;            /* 可根据需要调整高度 */
+            overflow-y: auto;         /* 超出时显示滚动条 */
+            white-space: pre-wrap;    /* 保留换行 */
+            padding: 8px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+            font-family: monospace;   /* 等宽字体，更易阅读 */
+        }
+    </style>
+</head>
+<body>
+
+<h2>基础参数</h2>
+<label>token：</label>
+<input type="text" id="token" value="">
+<br><br>
+<label>userId：</label>
+<input type="text" id="userId" value="">
+<br><br>
+<label>识别语言：</label>
+<select id="languageSelect" style="width: 200px;">
+    <option value="zh-Hans-CN">中文简体-普通话</option>
+    <option value="en-US">English (US)</option>
+    <option value="es-ES">Español</option>
+    <option value="fr-FR">Français</option>
+    <option value="de-DE">Deutsch</option>
+    <option value="it-IT">Italiano</option>
+    <option value="ko-KR">한국어</option>
+    <option value="ja-JP">日本語</option>
+</select><br><br>
+<hr/>
+<h2>🎙️ 实时语音识别</h2>
+<br>
+
+<label>识别类型：</label>
+<select id="transcribe_type" style="width: 200px;">
+    <option value="realtime">实时识别</option>
+    <option value="one_sentence">一句话识别</option>
+</select>
+<br><br>
+
+<label>启用翻译：</label>
+<input type="checkbox" id="enableRealtimeTranslator">
+<br><br>
+
+<label>翻译到目标语言：</label>
+<select id="realtimeTranslatorTarget" style="width: 200px;">
+    <option value="zh-CN">中文简体-普通话</option>
+    <option value="en-US">English (US)</option>
+    <option value="es-ES">Español</option>
+    <option value="fr-FR">Français</option>
+    <option value="de-DE">Deutsch</option>
+    <option value="it-IT">Italiano</option>
+    <option value="ko-KR">한국어</option>
+    <option value="ja-JP">日本語</option>
+</select>
+<br><br>
+
+<button id="btnStart">🎤 开始识别</button>
+<button id="btnStop">🎤 停止识别</button>
+
+<!-- 自动滚动的结果框 -->
+<div id="result"></div>
+
+<hr/>
+
+<script>
+    let ws;
+    let audioChunks = [];
+    const FRAMES_PER_SECOND = 25;
+
+    // 页面加载：读取并填充 token，绑定缓存更新
+    window.onload = function () {
+        const tokenInput = document.getElementById("token");
+        // 如果本地有缓存，就填入
+        const savedToken = localStorage.getItem("asr_token");
+        if (savedToken) {
+            tokenInput.value = savedToken;
+        }
+        // 用户每次修改 token 就更新缓存
+        tokenInput.addEventListener("input", () => {
+            localStorage.setItem("asr_token", tokenInput.value.trim());
+        });
+
+        // 监听其他参数变更
+        document.getElementById("enableRealtimeTranslator")
+            .addEventListener("change", params_change);
+        document.getElementById("realtimeTranslatorTarget")
+            .addEventListener("change", params_change);
+
+        // 按钮绑定
+        document.getElementById("btnStart").addEventListener("click", start);
+        document.getElementById("btnStop").addEventListener("click", stop);
+    };
+
+    // 协议头构建
+    function buildHeader(messageType, flags = 0, serialization = 1, compression = 0) {
+        const version = 1;
+        const headerSize = 1; // 4 字节
+        const byte0 = (version << 4) | headerSize;
+        const byte1 = (messageType << 4) | flags;
+        const byte2 = (serialization << 4) | compression;
+        const byte3 = 0;
+        return new Uint8Array([byte0, byte1, byte2, byte3]);
+    }
+
+    // 整包构建
+    function buildPacket(messageType, payload, flags = 0, isJson = false) {
+        const header = buildHeader(messageType, flags, isJson ? 1 : 0);
+        const payloadBytes = isJson
+            ? new TextEncoder().encode(JSON.stringify(payload))
+            : payload;
+        const sizeBytes = new Uint8Array(4);
+        new DataView(sizeBytes.buffer).setUint32(0, payloadBytes.length, false);
+        return new Blob([header, sizeBytes, payloadBytes]);
+    }
+
+    // 动态更新参数
+    function params_change() {
+        if (!ws || ws.readyState !== WebSocket.OPEN) return;
+        const config = {
+            language: document.getElementById("languageSelect").value,
+            enable_translator: document.getElementById("enableRealtimeTranslator").checked,
+            translator_to_language: document.getElementById("realtimeTranslatorTarget").value,
+        };
+        ws.send(buildPacket(3, config, 0, true));
+        console.log("实时更新参数包已发送", config);
+    }
+
+    async function stop() {
+        if (ws && ws.readyState === WebSocket.OPEN) {
+            ws.send(buildPacket(4, {}, 0, true));
+        }
+    }
+
+    async function start() {
+        // 再次确保最新 token 已缓存
+        const token = document.getElementById("token").value.trim();
+        localStorage.setItem("asr_token", token);
+        const userId = document.getElementById("userId").value.trim();
+        if (!userId) {
+            alert("请输入 userId");
+            return;
+        }
+        const reqId = Date.now().toString();
+        ws = new WebSocket(
+            `wss://recorder-test.iot.360.cn/v2/transcribe/realtime?reqId=${reqId}&src=iot_media&userId=${userId}`,
+            ["chat", token]
+        );
+        ws.binaryType = "arraybuffer";
+
+        const resultElem = document.getElementById("result");
+        resultElem.innerText = ""; // 每次启动清空显示
+
+        ws.onmessage = (e) => {
+            const buffer = new Uint8Array(e.data);
+            const header = buffer.slice(0, 4);
+            const payloadLen = new DataView(buffer.slice(4, 8).buffer)
+                .getUint32(0, false);
+            const payloadBytes = buffer.slice(8, 8 + payloadLen);
+
+            const messageType = header[1] >> 4;
+            const serializationMethod = header[2] >> 4;
+
+            if ((messageType === 9 || messageType === 15) && serializationMethod === 1) {
+                try {
+                    const data = JSON.parse(new TextDecoder().decode(payloadBytes));
+                    if (data.status === "realtime") {
+                        resultElem.innerText += `📝 实时识别片段: ${data.text}\n`;
+                    } else if (data.status === "completed") {
+                        resultElem.innerText += `✅ 最终识别结果: ${data.text}\n`;
+                        if (data.segments) {
+                            data.segments.forEach(seg => {
+                                const speaker = seg.speaker || "未知说话人";
+                                resultElem.innerText +=
+                                    `👤 ${speaker} [${seg.start.toFixed(2)}s - ${seg.end.toFixed(2)}s]: ${seg.text}\n`;
+                            });
+                        }
+                    } else if (data.status === "success") {
+                        resultElem.innerText += `🔗 连接成功\n`;
+                    } else {
+                        resultElem.innerText += `📦 其他消息: ${JSON.stringify(data)}\n`;
+                    }
+                } catch (err) {
+                    console.error("解析错误:", err);
+                }
+            } else {
+                console.warn("收到非预期消息", { messageType, serializationMethod });
+            }
+
+            // 自动滚动到底部
+            resultElem.scrollTop = resultElem.scrollHeight;
+        };
+
+        ws.onopen = async () => {
+            const config = {
+                format: "pcm",
+                language: document.getElementById("languageSelect").value,
+                translator_to_language: document.getElementById("realtimeTranslatorTarget").value,
+                transcribe_type: document.getElementById("transcribe_type").value,
+                audio_format: { codec: "PCM", samplerate: 16000, channel: 1, bitdepth: 16 }
+            };
+            ws.send(buildPacket(1, config, 0, true));
+
+            // 开始采集并发送音频
+            const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+            const audioCtx = new AudioContext({ sampleRate: 16000 });
+            const source = audioCtx.createMediaStreamSource(stream);
+            const processor = audioCtx.createScriptProcessor(4096, 1, 1);
+            const frameSize = Math.floor(audioCtx.sampleRate / FRAMES_PER_SECOND);
+
+            processor.onaudioprocess = e => {
+                const floatSamples = e.inputBuffer.getChannelData(0);
+                const pcm = new Int16Array(floatSamples.length);
+                for (let i = 0; i < floatSamples.length; i++) {
+                    const s = Math.max(-1, Math.min(1, floatSamples[i]));
+                    pcm[i] = s * 32767;
+                }
+                audioChunks.push(...pcm);
+                while (audioChunks.length >= frameSize) {
+                    const frame = audioChunks.splice(0, frameSize);
+                    ws.send(buildPacket(2, new Uint8Array(new Int16Array(frame).buffer)));
+                }
+            };
+
+            source.connect(processor);
+            processor.connect(audioCtx.destination);
+        };
+    }
+</script>
+</body>
+</html>

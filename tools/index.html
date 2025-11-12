@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excel转JSON工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .container:hover {
+            transform: translateY(-5px);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 40px;
+        }
+        
+        .upload-section {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border: 2px dashed #ddd;
+            transition: all 0.3s ease;
+        }
+        
+        .upload-section:hover {
+            border-color: #667eea;
+            background: #f0f2ff;
+        }
+        
+        .upload-icon {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            color: #667eea;
+        }
+        
+        #fileInput {
+            display: none;
+        }
+        
+        .upload-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .upload-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .upload-btn:active {
+            transform: translateY(-1px);
+        }
+        
+        .convert-btn {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+        }
+        
+        .convert-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+        }
+        
+        .convert-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        #fileName {
+            font-size: 1rem;
+            color: #666;
+            margin-top: 15px;
+            font-weight: 500;
+        }
+        
+        .result-section {
+            margin-top: 40px;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .result-header h2 {
+            color: #1e3c72;
+            font-size: 1.8rem;
+        }
+        
+        .copy-btn {
+            background: #17a2b8;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .copy-btn:hover {
+            background: #138496;
+            transform: translateY(-2px);
+        }
+        
+        .download-btn {
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-left: 10px;
+        }
+        
+        .download-btn:hover {
+            background: #ff5252;
+            transform: translateY(-2px);
+        }
+        
+        #jsonResult {
+            width: 100%;
+            min-height: 300px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: #f8f9fa;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            transition: all 0.3s ease;
+        }
+        
+        #jsonResult:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification.error {
+            background: #dc3545;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .result-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            
+            .copy-btn, .download-btn {
+                width: 100%;
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Excel转JSON工具</h1>
+            <p>简单快速地将Excel文件转换为JSON格式</p>
+        </div>
+        
+        <div class="content">
+            <div class="upload-section">
+                <div class="upload-icon">📁</div>
+                <p>拖放Excel文件到此处，或点击下方按钮选择文件</p>
+                <input type="file" id="fileInput" accept=".xlsx,.xls">
+                <button class="upload-btn" onclick="document.getElementById('fileInput').click()">选择Excel文件</button>
+                <p id="fileName">未选择文件</p>
+                <button class="convert-btn" id="convertBtn" disabled>转换为JSON</button>
+            </div>
+            
+            <div class="result-section">
+                <div class="result-header">
+                    <h2>转换结果</h2>
+                    <div>
+                        <button class="copy-btn" id="copyBtn" disabled>复制JSON</button>
+                        <button class="download-btn" id="downloadBtn" disabled>下载JSON</button>
+                    </div>
+                </div>
+                <pre id="jsonResult"></pre>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 Excel转JSON工具 - 安全、高效、免费</p>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification">操作成功</div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script>
+        // 获取DOM元素
+        const fileInput = document.getElementById('fileInput');
+        const fileName = document.getElementById('fileName');
+        const convertBtn = document.getElementById('convertBtn');
+        const jsonResult = document.getElementById('jsonResult');
+        const copyBtn = document.getElementById('copyBtn');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const notification = document.getElementById('notification');
+        const uploadSection = document.querySelector('.upload-section');
+        
+        let selectedFile = null;
+        
+        // 文件选择事件
+        fileInput.addEventListener('change', (e) => {
+            if (e.target.files.length > 0) {
+                selectedFile = e.target.files[0];
+                fileName.textContent = `已选择: ${selectedFile.name}`;
+                convertBtn.disabled = false;
+                jsonResult.textContent = '';
+                copyBtn.disabled = true;
+                downloadBtn.disabled = true;
+            }
+        });
+        
+        // 拖放功能
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadSection.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadSection.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadSection.addEventListener(eventName, unhighlight, false);
+        });
+        
+        function highlight() {
+            uploadSection.classList.add('highlight');
+        }
+        
+        function unhighlight() {
+            uploadSection.classList.remove('highlight');
+        }
+        
+        uploadSection.addEventListener('drop', handleDrop, false);
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            
+            if (files.length > 0) {
+                selectedFile = files[0];
+                fileName.textContent = `已选择: ${selectedFile.name}`;
+                convertBtn.disabled = false;
+                jsonResult.textContent = '';
+                copyBtn.disabled = true;
+                downloadBtn.disabled = true;
+            }
+        }
+        
+        // 转换按钮点击事件
+        convertBtn.addEventListener('click', () => {
+            if (!selectedFile) return;
+            
+            const reader = new FileReader();
+            
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    
+                    // 获取第一个工作表
+                    const firstSheetName = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheetName];
+                    
+                    // 转换为JSON
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                    const jsonString = JSON.stringify(jsonData, null, 2);
+                    
+                    jsonResult.textContent = jsonString;
+                    copyBtn.disabled = false;
+                    downloadBtn.disabled = false;
+                    
+                    showNotification('转换成功！', 'success');
+                } catch (error) {
+                    console.error('转换失败:', error);
+                    showNotification('转换失败，请检查文件格式是否正确', 'error');
+                }
+            };
+            
+            reader.onerror = function() {
+                showNotification('文件读取失败', 'error');
+            };
+            
+            reader.readAsArrayBuffer(selectedFile);
+        });
+        
+        // 复制按钮点击事件
+        copyBtn.addEventListener('click', () => {
+            jsonResult.select();
+            document.execCommand('copy');
+            showNotification('JSON已复制到剪贴板');
+        });
+        
+        // 下载按钮点击事件
+        downloadBtn.addEventListener('click', () => {
+            if (!jsonResult.textContent) return;
+            
+            const blob = new Blob([jsonResult.textContent], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            
+            // 使用原始文件名，但替换扩展名
+            const originalName = selectedFile ? selectedFile.name.replace(/\.(xlsx|xls)$/, '') : 'data';
+            a.href = url;
+            a.download = `${originalName}.json`;
+            document.body.appendChild(a);
+            a.click();
+            
+            // 清理
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            
+            showNotification('JSON文件已下载');
+        });
+        
+        // 显示通知
+        function showNotification(message, type = 'success') {
+            notification.textContent = message;
+            notification.className = `notification ${type === 'error' ? 'error' : ''}`;
+            
+            // 触发重排
+            notification.offsetWidth;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

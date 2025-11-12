@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>多语言JSON处理工具</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 25px;
+        }
+        
+        .section h2 {
+            color: #1e3c72;
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            border-bottom: 2px solid #e9ecef;
+            padding-bottom: 10px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #495057;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+            margin-right: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+            box-shadow: 0 4px 15px rgba(108, 117, 125, 0.4);
+        }
+        
+        .btn-secondary:hover {
+            box-shadow: 0 6px 20px rgba(108, 117, 125, 0.6);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            box-shadow: 0 4px 15px rgba(40, 167, 69, 0.4);
+        }
+        
+        .btn-success:hover {
+            box-shadow: 0 6px 20px rgba(40, 167, 69, 0.6);
+        }
+        
+        .btn-warning {
+            background: linear-gradient(135deg, #ffc107 0%, #ffca2c 100%);
+            color: #212529;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);
+        }
+        
+        .btn-warning:hover {
+            box-shadow: 0 6px 20px rgba(255, 193, 7, 0.6);
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .input-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .input-group select,
+        .input-group input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s ease;
+        }
+        
+        .input-group select:focus,
+        .input-group input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .file-upload {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .file-upload input[type="file"] {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .result-box {
+            background: #f8f9fa;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            padding: 20px;
+            min-height: 150px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            white-space: pre-wrap;
+            word-break: break-all;
+            overflow-x: auto;
+        }
+        
+        .highlight {
+            background-color: #fff3cd;
+            border-color: #ffeaa7;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #28a745;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transform: translateX(100%);
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+            opacity: 1;
+        }
+        
+        .notification.error {
+            background: #dc3545;
+        }
+        
+        .notification.info {
+            background: #17a2b8;
+        }
+        
+        .language-sample {
+            background: #e9ecef;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+        }
+        
+        .language-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .language-tag {
+            background: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .language-tag:hover {
+            background: #667eea;
+            color: white;
+        }
+        
+        .translation-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .translation-item {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+        }
+        
+        .translation-item strong {
+            display: block;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .container {
+                border-radius: 10px;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .input-group {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                margin-right: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>多语言JSON处理工具</h1>
+            <p>导入JSON和TXT文件，查询和替换多语言翻译内容</p>
+        </div>
+        
+        <div class="content">
+            <!-- JSON输入区域 -->
+            <div class="section">
+                <h2>JSON数据输入</h2>
+                <div class="form-group">
+                    <label for="jsonInput">请输入或粘贴JSON数据：</label>
+                    <div class="language-sample">示例：[{"原文": "取消", "法语": "Annuler", "西班牙语": "Cancelar", ...}]</div>
+                    <textarea id="jsonInput" placeholder="请在此粘贴您的JSON数据..."></textarea>
+                    <div class="input-group">
+                        <button class="btn btn-secondary" onclick="loadSampleData()">加载示例数据</button>
+                        <button class="btn btn-success" onclick="parseJsonData()">解析JSON</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- TXT内容粘贴区域 -->
+            <div class="section">
+                <h2>TXT内容粘贴</h2>
+                <div class="form-group">
+                    <label for="txtContent">粘贴TXT内容（用于替换，格式：原文=翻译）：</label>
+                    <div class="language-sample">示例：取消=Cancel\n确定=OK\n保存=Save</div>
+                    <textarea id="txtContent" placeholder="请在此粘贴TXT内容，每行格式为：原文=翻译..."></textarea>
+                    <button class="btn btn-success" onclick="parseTxtContent()">解析TXT内容</button>
+                    <p id="txtStatus" style="margin-top: 10px; color: #6c757d;">未解析内容</p>
+                </div>
+            </div>
+            
+            <!-- 功能区域 -->
+            <div class="section">
+                <h2>功能操作</h2>
+                
+                <!-- 按语言查询 -->
+                <div class="form-group">
+                    <label>1. 按语言查询翻译：</label>
+                    <div class="language-list" id="languageList">
+                        <!-- 语言标签将动态生成 -->
+                    </div>
+                    <div class="input-group">
+                        <select id="languageSelect">
+                            <option value="">请选择语言</option>
+                        </select>
+                        <input type="text" id="keywordInput" placeholder="输入要查询的原文关键词">
+                        <button class="btn" onclick="queryByLanguage()">查询</button>
+                    </div>
+                </div>
+                
+                <!-- 按原文替换 -->
+                <div class="form-group">
+                    <label>2. 按原文替换翻译：</label>
+                    <div class="input-group">
+                    <select id="replaceLanguageSelect">
+                        <option value="">请选择要替换的目标语言</option>
+                    </select>
+                    <button class="btn btn-success" onclick="replaceByOriginalText()">根据TXT内容替换</button>
+                </div>
+                </div>
+            </div>
+            
+            <!-- 结果展示区域 -->
+            <div class="section">
+                <h2>结果展示</h2>
+                <div class="input-group">
+                    <button class="btn btn-secondary" onclick="viewAllTranslations()">查看所有翻译</button>
+                    <button class="btn btn-warning" onclick="copyResult()">复制结果</button>
+                    <button class="btn btn-success" onclick="downloadJson()">下载JSON</button>
+                </div>
+                <div id="resultBox" class="result-box">结果将显示在这里...</div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2024 多语言JSON处理工具 - 安全、高效、免费</p>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification">操作成功</div>
+    
+    <script>
+        // 全局变量
+        let jsonData = [];
+        let txtContent = '';
+        let txtFileName = '';
+        let availableLanguages = [];
+        
+        // DOM元素
+        const jsonInput = document.getElementById('jsonInput');
+        const txtContentInput = document.getElementById('txtContent');
+        const txtStatusEl = document.getElementById('txtStatus');
+        const languageSelect = document.getElementById('languageSelect');
+        const replaceLanguageSelect = document.getElementById('replaceLanguageSelect');
+        const keywordInput = document.getElementById('keywordInput');
+        const resultBox = document.getElementById('resultBox');
+        const notification = document.getElementById('notification');
+        const languageList = document.getElementById('languageList');
+        
+        // 示例数据
+        const sampleData = `[
+  {
+    "原文": "取消",
+    "法语": "Annuler",
+    "西班牙语": "Cancelar",
+    "俄语": "Отменить",
+    "葡萄牙语": "Cancelar",
+    "意大利语": "Annullare",
+    "土耳其语": "İptal",
+    "繁体中文": "取消",
+    "韩语": "취소"
+  },
+  {
+    "原文": "确定",
+    "法语": "Confirmer",
+    "西班牙语": "Confirmar",
+    "俄语": "Подтвердить",
+    "葡萄牙语": "Confirmar",
+    "意大利语": "Confermare",
+    "土耳其语": "Onaylamak",
+    "繁体中文": "確定",
+    "韩语": "확인"
+  },
+  {
+    "原文": "保存",
+    "法语": "Enregistrer",
+    "西班牙语": "Guardar",
+    "俄语": "Сохранить",
+    "葡萄牙语": "Salvar",
+    "意大利语": "Salvare",
+    "土耳其语": "Kaydetmek",
+    "繁体中文": "保存",
+    "韩语": "저장"
+  }
+]`;
+        
+        // 加载示例数据
+        function loadSampleData() {
+            jsonInput.value = sampleData;
+            parseJsonData();
+            showNotification('示例数据已加载', 'info');
+        }
+        
+        // 解析JSON数据
+        function parseJsonData() {
+            try {
+                jsonData = JSON.parse(jsonInput.value.trim());
+                
+                // 提取可用语言
+                if (jsonData.length > 0) {
+                    availableLanguages = Object.keys(jsonData[0]);
+                    updateLanguageSelects();
+                    updateLanguageTags();
+                    showNotification('JSON解析成功，共解析 ' + jsonData.length + ' 条记录', 'success');
+                } else {
+                    showNotification('JSON数据为空', 'error');
+                }
+            } catch (error) {
+                console.error('JSON解析失败:', error);
+                showNotification('JSON格式错误，请检查输入', 'error');
+            }
+        }
+        
+        // 更新语言选择下拉框
+        function updateLanguageSelects() {
+            // 清空现有选项
+            languageSelect.innerHTML = '<option value="">请选择语言</option>';
+            replaceLanguageSelect.innerHTML = '<option value="">请选择要替换的目标语言</option>';
+            
+            // 添加语言选项（跳过"原文"）
+            availableLanguages.forEach(lang => {
+                if (lang !== '原文') {
+                    const option1 = document.createElement('option');
+                    option1.value = lang;
+                    option1.textContent = lang;
+                    languageSelect.appendChild(option1);
+                    
+                    const option2 = document.createElement('option');
+                    option2.value = lang;
+                    option2.textContent = lang;
+                    replaceLanguageSelect.appendChild(option2);
+                }
+            });
+        }
+        
+        // 更新语言标签
+        function updateLanguageTags() {
+            languageList.innerHTML = '';
+            
+            availableLanguages.forEach(lang => {
+                if (lang !== '原文') {
+                    const tag = document.createElement('div');
+                    tag.className = 'language-tag';
+                    tag.textContent = lang;
+                    tag.onclick = () => {
+                        languageSelect.value = lang;
+                        keywordInput.focus();
+                    };
+                    languageList.appendChild(tag);
+                }
+            });
+        }
+        
+        // 按语言查询
+        function queryByLanguage() {
+            const language = languageSelect.value;
+            const keyword = keywordInput.value.trim();
+            
+            if (!language) {
+                showNotification('请选择语言', 'error');
+                return;
+            }
+            
+            if (!jsonData || jsonData.length === 0) {
+                showNotification('请先解析JSON数据', 'error');
+                return;
+            }
+            
+            // 过滤结果
+            let results = jsonData;
+            if (keyword) {
+                results = jsonData.filter(item => item['原文'] && item['原文'].includes(keyword));
+            }
+            
+            if (results.length === 0) {
+                resultBox.textContent = '未找到匹配结果';
+                showNotification('未找到匹配结果', 'info');
+                return;
+            }
+            
+            // 格式化结果
+            let output = '';
+            const translationGrid = document.createElement('div');
+            translationGrid.className = 'translation-grid';
+            
+            results.forEach(item => {
+                if (item['原文'] && item[language]) {
+                    const translationItem = document.createElement('div');
+                    translationItem.className = 'translation-item';
+                    translationItem.innerHTML = `
+                        <strong>原文：${item['原文']}</strong>
+                        <div>${language}：${item[language]}</div>
+                    `;
+                    translationGrid.appendChild(translationItem);
+                }
+            });
+            
+            // 清空结果框并添加网格
+            resultBox.innerHTML = '';
+            resultBox.appendChild(translationGrid);
+            
+            showNotification(`找到 ${results.length} 条匹配结果`, 'success');
+        }
+        
+        // 查看所有翻译
+        function viewAllTranslations() {
+            if (!jsonData || jsonData.length === 0) {
+                showNotification('请先解析JSON数据', 'error');
+                return;
+            }
+            
+            // 格式化JSON并显示
+            resultBox.textContent = JSON.stringify(jsonData, null, 2);
+            showNotification('显示所有翻译数据', 'info');
+        }
+        
+        // 根据TXT内容替换翻译
+        function replaceByOriginalText() {
+            const targetLanguage = replaceLanguageSelect.value;
+            
+            if (!targetLanguage) {
+                showNotification('请选择要替换的目标语言', 'error');
+                return;
+            }
+            
+            if (!txtContent) {
+                showNotification('请先粘贴并解析TXT内容', 'error');
+                return;
+            }
+            
+            if (!jsonData || jsonData.length === 0) {
+                showNotification('请先解析JSON数据', 'error');
+                return;
+            }
+            
+            // 解析TXT内容（假设格式为：原文=翻译）
+            const txtLines = txtContent.split('\n');
+            const replacements = {};
+            
+            txtLines.forEach(line => {
+                const parts = line.split('=');
+                if (parts.length === 2) {
+                    const original = parts[0].trim();
+                    const translation = parts[1].trim();
+                    replacements[original] = translation;
+                }
+            });
+            
+            // 执行替换
+            let replacedCount = 0;
+            jsonData.forEach(item => {
+                if (item['原文'] && replacements[item['原文']]) {
+                    item[targetLanguage] = replacements[item['原文']];
+                    replacedCount++;
+                }
+            });
+            
+            // 更新显示
+            jsonInput.value = JSON.stringify(jsonData, null, 2);
+            resultBox.textContent = JSON.stringify(jsonData, null, 2);
+            
+            showNotification(`成功替换 ${replacedCount} 条翻译`, 'success');
+        }
+        
+        // 复制结果
+        function copyResult() {
+            if (!resultBox.textContent && !resultBox.innerHTML) {
+                showNotification('没有可复制的内容', 'error');
+                return;
+            }
+            
+            // 创建临时文本区域用于复制
+            const tempTextArea = document.createElement('textarea');
+            tempTextArea.value = resultBox.textContent || JSON.stringify(jsonData, null, 2);
+            document.body.appendChild(tempTextArea);
+            tempTextArea.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempTextArea);
+            
+            showNotification('内容已复制到剪贴板', 'success');
+        }
+        
+        // 下载JSON
+        function downloadJson() {
+            if (!jsonData || jsonData.length === 0) {
+                showNotification('没有可下载的内容', 'error');
+                return;
+            }
+            
+            const jsonString = JSON.stringify(jsonData, null, 2);
+            const blob = new Blob([jsonString], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            
+            a.href = url;
+            a.download = 'translations.json';
+            document.body.appendChild(a);
+            a.click();
+            
+            // 清理
+            setTimeout(() => {
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }, 100);
+            
+            showNotification('JSON文件已下载', 'success');
+        }
+        
+        // 显示通知
+        function showNotification(message, type = 'success') {
+            notification.textContent = message;
+            notification.className = `notification ${type === 'error' ? 'error' : type === 'info' ? 'info' : ''}`;
+            
+            // 触发重排
+            notification.offsetWidth;
+            
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // 解析TXT内容
+        function parseTxtContent() {
+            txtContent = txtContentInput.value.trim();
+            
+            if (!txtContent) {
+                showNotification('TXT内容为空，请输入或粘贴内容', 'error');
+                return;
+            }
+            
+            // 统计有效行数
+            const txtLines = txtContent.split('\n');
+            const validLines = txtLines.filter(line => line.trim() && line.includes('='));
+            
+            txtStatusEl.textContent = `已解析：${validLines.length} 行有效内容`;
+            txtStatusEl.style.color = '#28a745';
+            showNotification(`TXT内容解析成功，共 ${validLines.length} 行有效内容`, 'success');
+        }
+        
+        // 初始化
+        window.onload = function() {
+            // 可以在这里添加初始化代码
+        };
+    </script>
+</body>
+</html>

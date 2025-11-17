@@ -1,38 +1,36 @@
-# My Nuxt.js App
+我的 Nuxt.js 应用
 
-This is a simple Nuxt.js application with two pages:
-- Home page (/)
-- About page (/about)
+这是一个简单的 Nuxt.js 应用程序，包含两个页面：
 
-## Project Structure
+- 首页 (/)
+- 关于页面 (/about)
 
-```
+项目结构
+
 my-nuxt-app/
 ├── pages/
-│   ├── index.vue (Home page)
-│   └── about.vue (About page)
-├── nuxt.config.ts (Nuxt configuration)
-└── package.json (Project dependencies)
-```
+│ ├── index.vue (首页)
+│ └── about.vue (关于页面)
+├── nuxt.config.ts (Nuxt 配置)
+└── package.json (项目依赖)
 
-## Development
+开发
 
-To run the application:
+运行应用程序：
 
-1. Install dependencies:
-   ```
+1. 安装依赖：
    npm install
-   ```
-
-2. Start the development server:
-   ```
+2. 启动开发服务器：
    npm run dev
-   ```
+3. 在浏览器中打开 http://localhost:3000
 
-3. Open your browser at http://localhost:3000
+功能
 
-## Features
+- 页面间的基本路由
+- 使用作用域 CSS 的简单样式
+- 用于导航的 NuxtLink 组件
 
-- Basic routing between pages
-- Simple styling with scoped CSS
-- NuxtLink component for navigation
+---
+
+请注意，我们在之前的美化工作中已经增强了这些页面的样式和用户体验。现在所有页面都具有一致的现代化设计风格，包括卡片式布局、渐变背
+景、阴影效果和悬停动画。

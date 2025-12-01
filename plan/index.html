@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>交互式3D太阳系模型</title>
+    
+  <script type="module" crossorigin src="/assets/index-edffa7df.js"></script>
+  <link rel="stylesheet" href="/assets/index-00591e03.css">
+</head>
+<body>
+    <div id="app">
+        <!-- 3D渲染画布 -->
+        <canvas id="solar-system-canvas"></canvas>
+        
+        <!-- 控制面板 -->
+        <div id="controls">
+            <button id="reset-btn">重置视角</button>
+            <button id="auto-rotate-btn">自动旋转</button>
+            <button id="show-orbits-btn">显示轨道</button>
+        </div>
+        
+        <!-- 时间控制面板 -->
+        <div id="time-controls">
+            <div class="time-control-item">
+                <label for="time-scale">时间缩放:</label>
+                <input type="range" id="time-scale" min="1" max="10000" value="1" step="10">
+                <span id="time-scale-value">1x</span>
+            </div>
+        </div>
+        
+        <!-- 信息面板 -->
+        <div id="info-panel" class="hidden">
+            <div class="info-header">
+                <h2 id="planet-name">行星信息</h2>
+                <button id="close-info-btn">×</button>
+            </div>
+            <div class="info-content">
+                <div class="info-item">
+                    <span class="label">半径:</span>
+                    <span id="planet-radius">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">距离太阳:</span>
+                    <span id="planet-distance">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">自转周期:</span>
+                    <span id="planet-rotation">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">公转周期:</span>
+                    <span id="planet-revolution">-</span>
+                </div>
+                <div class="info-item">
+                    <span class="label">描述:</span>
+                    <p id="planet-description">-</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 实时数据面板 -->
+        <div id="data-panel">
+            <div class="data-header">
+                <h3>实时数据</h3>
+            </div>
+            <div class="data-content">
+                <div class="data-item">
+                    <span class="label">模拟时间:</span>
+                    <span id="simulation-time">0 天</span>
+                </div>
+                <div class="data-item">
+                    <span class="label">当前选中:</span>
+                    <span id="current-planet">无</span>
+                </div>
+                <div class="data-item">
+                    <span class="label">位置 X:</span>
+                    <span id="pos-x">-</span>
+                </div>
+                <div class="data-item">
+                    <span class="label">位置 Y:</span>
+                    <span id="pos-y">-</span>
+                </div>
+                <div class="data-item">
+                    <span class="label">位置 Z:</span>
+                    <span id="pos-z">-</span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 加载提示 -->
+        <div id="loading">
+            <div class="loading-spinner"></div>
+            <p>加载太阳系模型...</p>
+        </div>
+    </div>
+    
+    <!-- 主JavaScript文件 -->
+    
+</body>
+</html>

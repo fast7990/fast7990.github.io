@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>交互式3D太阳系模型</title>
     
-  <script type="module" crossorigin src="./assets/index-edffa7df.js"></script>
-  <link rel="stylesheet" href="./assets/index-00591e03.css">
+  <script type="module" crossorigin src="./assets/index-29b13887.js"></script>
+  <link rel="stylesheet" href="./assets/index-5f92ab43.css">
 </head>
 <body>
     <div id="app">
@@ -20,12 +20,40 @@
             <button id="show-orbits-btn">显示轨道</button>
         </div>
         
-        <!-- 时间控制面板 -->
+        <!-- 时间流速控制面板 -->
         <div id="time-controls">
+            <div class="time-control-header">
+                <h3>时间流速控制</h3>
+            </div>
+            
+            <!-- 播放/暂停按钮 -->
             <div class="time-control-item">
-                <label for="time-scale">时间缩放:</label>
-                <input type="range" id="time-scale" min="1" max="10000" value="1" step="10">
+                <button id="play-pause-btn" class="time-btn primary">暂停</button>
+            </div>
+            
+            <!-- 预设按钮 -->
+            <div class="time-control-item presets">
+                <button class="time-preset-btn" data-scale="1">1x</button>
+                <button class="time-preset-btn" data-scale="10">10x</button>
+                <button class="time-preset-btn" data-scale="100">100x</button>
+                <button class="time-preset-btn" data-scale="1000">1000x</button>
+                <button class="time-preset-btn" data-scale="10000">10000x</button>
+                <button class="time-preset-btn" data-scale="100000">100000x</button>
+                <button class="time-preset-btn" data-scale="1000000">1000000x</button>
+            </div>
+            
+            <!-- 滑块控制 -->
+            <div class="time-control-item">
+                <label for="time-scale">流速倍率:</label>
+                <input type="range" id="time-scale" min="0" max="1000000" value="1" step="1">
                 <span id="time-scale-value">1x</span>
+            </div>
+            
+            <!-- 数值输入框 -->
+            <div class="time-control-item">
+                <label for="time-scale-input">精确值:</label>
+                <input type="number" id="time-scale-input" min="0" max="10000" value="1" step="1">
+                <span>x</span>
             </div>
         </div>
         

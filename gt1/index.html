@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Yijing Mall | 本地静态版</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f6fa;
+      --card: #ffffff;
+      --primary: #1e7ccf;
+      --primary-soft: #e6f1ff;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      --radius: 14px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: linear-gradient(90deg, #1e7ccf, #2f9ae5);
+      color: #fff;
+      box-shadow: 0 6px 20px rgba(30, 124, 207, 0.25);
+    }
+
+    .nav {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .brand {
+      font-weight: 700;
+      font-size: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand::before {
+      content: "YJ";
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, 0.22);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      letter-spacing: 0.5px;
+    }
+
+    .nav-links {
+      display: flex;
+      flex: 1;
+      gap: 18px;
+      font-weight: 600;
+      color: #e9f4ff;
+      font-size: 14px;
+    }
+
+    .nav-links a:hover {
+      color: #fff;
+      text-decoration: underline;
+    }
+
+    .badge {
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.18);
+      color: #fff;
+      font-weight: 600;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .hero {
+      max-width: 1180px;
+      margin: 28px auto 20px;
+      padding: 0 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+      align-items: stretch;
+    }
+
+    .hero-card {
+      background: linear-gradient(135deg, #f0f6ff, #ffffff);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+    }
+
+    .hero h1 {
+      margin: 8px 0 12px;
+      font-size: clamp(22px, 4vw, 32px);
+      color: #0f172a;
+    }
+
+    .hero p {
+      margin: 0 0 16px;
+      color: var(--muted);
+    }
+
+    .chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .chip {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 7px 12px;
+      font-size: 13px;
+      color: var(--muted);
+    }
+
+    .product-section {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 20px 40px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      gap: 10px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 20px;
+      color: #0f172a;
+    }
+
+    .link-more {
+      font-weight: 600;
+      color: var(--primary);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+      display: grid;
+      gap: 10px;
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .thumb {
+      position: relative;
+      height: 140px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #cfe5ff, #f7fbff);
+      display: grid;
+      place-items: center;
+      color: #0f172a;
+      font-weight: 700;
+      font-size: 17px;
+    }
+
+    .thumb::after {
+      content: "Toy";
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      font-size: 12px;
+      color: rgba(0, 0, 0, 0.35);
+    }
+
+    .card-title {
+      margin: 0;
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .price {
+      color: var(--primary);
+      font-weight: 700;
+      font-size: 15px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn {
+      flex: 1;
+      padding: 9px 10px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+
+    .btn.primary {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+    }
+
+    .btn:hover {
+      box-shadow: var(--shadow);
+      transform: translateY(-1px);
+    }
+
+    .pay-strip {
+      max-width: 1180px;
+      margin: 34px auto 0;
+      padding: 16px 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--card);
+      box-shadow: 0 6px 22px rgba(0, 0, 0, 0.06);
+      display: grid;
+      gap: 10px;
+    }
+
+    .pay-title {
+      margin: 0;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: 0.3px;
+    }
+
+    .pay-logos {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+      gap: 8px;
+    }
+
+    .logo-chip {
+      border: 1px dashed var(--border);
+      border-radius: 10px;
+      padding: 9px 10px;
+      text-align: center;
+      font-weight: 700;
+      color: #0f172a;
+      background: var(--primary-soft);
+    }
+
+    footer {
+      max-width: 1180px;
+      margin: 28px auto 60px;
+      padding: 0 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    footer h3 {
+      margin: 0 0 10px;
+      color: #0f172a;
+    }
+
+    footer .contact {
+      display: grid;
+      gap: 6px;
+      background: var(--card);
+      padding: 14px 16px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.05);
+    }
+
+    @media (max-width: 640px) {
+      .nav {
+        flex-wrap: wrap;
+      }
+      .nav-links {
+        width: 100%;
+        flex-wrap: wrap;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav">
+      <div class="brand">Yijing Mall</div>
+      <nav class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">儿童玩具</a>
+        <a href="#">跨境</a>
+        <a href="#">文化</a>
+        <a href="#">荣誉</a>
+        <a href="#">组织</a>
+        <a href="#">视频</a>
+      </nav>
+      <span class="badge">移动端 / English</span>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-card">
+      <span class="badge">儿童玩具</span>
+      <h1>精选童玩，跨境直达</h1>
+      <p>沿用 http://www.Lcyijing.cn 的栏目与列表形式，突出玩具列表与支付方式，适合本地预览与二次开发。</p>
+      <div class="chip-row">
+        <span class="chip">玩具 31-66 列表</span>
+        <span class="chip">USD 价格展示</span>
+        <span class="chip">跨境支付方式</span>
+      </div>
+    </div>
+    <div class="hero-card">
+      <h3 style="margin:0 0 10px;">页面要点</h3>
+      <div class="chip-row">
+        <span class="chip">顶部导航 + 子栏目</span>
+        <span class="chip">网格化商品卡片</span>
+        <span class="chip">支付 Logo 区</span>
+        <span class="chip">联系方式与地址</span>
+      </div>
+    </div>
+  </section>
+
+  <main class="product-section">
+    <div class="section-head">
+      <h2>儿童玩具</h2>
+      <a class="link-more" href="#">more &gt;&gt;</a>
+    </div>
+
+    <div class="grid" id="product-grid"></div>
+
+    <div class="pay-strip">
+      <p class="pay-title">支付 / 物流方式</p>
+      <div class="pay-logos">
+        <div class="logo-chip">PayPal</div>
+        <div class="logo-chip">VISA</div>
+        <div class="logo-chip">MASTER</div>
+        <div class="logo-chip">CNOOC</div>
+        <div class="logo-chip">JCB</div>
+        <div class="logo-chip">EMS</div>
+        <div class="logo-chip">DHL</div>
+        <div class="logo-chip">FedEx</div>
+        <div class="logo-chip">SOFORT</div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <h3>联系方式</h3>
+    <div class="contact">
+      <span>Mobile：+86 186 7639 4810</span>
+      <span>Email：18676394810@139.com</span>
+      <span>地址：山东省聊城经开区姜管屯街道仁庄村工业园如意金属制品有限公司102室</span>
+      <span>版权：Liaocheng Yijing Trading Co., Ltd 2022-2027</span>
+    </div>
+  </footer>
+
+  <script>
+    const products = [
+      { name: "Toys 66", price: "$23.29" },
+      { name: "Toys 65", price: "$23.29" },
+      { name: "Toys 64", price: "$23.29" },
+      { name: "Toys 62", price: "$23.21" },
+      { name: "Toys 61", price: "$23.40" },
+      { name: "Toys 56", price: "$23.10" },
+      { name: "Toys 55", price: "$23.10" },
+      { name: "Toys 54", price: "$23.10" },
+      { name: "Toys 53", price: "$23.10" },
+      { name: "Toys 52", price: "$20.00" },
+      { name: "Toys 51", price: "$25.00" },
+      { name: "Toys 46", price: "$22.46" },
+      { name: "Toys 45", price: "$22.46" },
+      { name: "Toys 44", price: "$22.46" },
+      { name: "Toys 43", price: "$22.46" },
+      { name: "Toys 42", price: "$22.50" },
+      { name: "Toys 41", price: "$22.50" },
+      { name: "Toys 36", price: "$15.53" },
+      { name: "Toys 35", price: "$15.53" },
+      { name: "Toys 34", price: "$15.62" },
+      { name: "Toys 33", price: "$15.62" },
+      { name: "Toys 32", price: "$15.45" },
+      { name: "Toys 31", price: "$15.45" },
+      { name: "Toys 29", price: "$23.56" },
+      { name: "Toys 28", price: "$23.56" },
+    ];
+
+    const grid = document.getElementById("product-grid");
+    products.forEach((item) => {
+      const card = document.createElement("article");
+      card.className = "card";
+      card.innerHTML = `
+        <div class="thumb">${item.name}</div>
+        <div>
+          <p class="card-title">${item.name}</p>
+          <p class="price">${item.price}</p>
+        </div>
+        <div class="actions">
+          <button class="btn">详情</button>
+          <button class="btn primary">询价</button>
+        </div>
+      `;
+      grid.appendChild(card);
+    });
+  </script>
+</body>
+</html>

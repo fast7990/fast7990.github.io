@@ -73,10 +73,30 @@ class WebsiteScraper {
     
     let browser;
     try {
-      // 简化配置，使用 Puppeteer 默认配置
+      // 优化浏览器配置，解决 net::ERR_BLOCKED_BY_CLIENT 问题
       browser = await puppeteer.launch({
         headless: 'new', // 使用新的无头模式
-        args: ['--no-sandbox', '--disable-setuid-sandbox', '--disable-gpu', '--disable-dev-shm-usage']
+        args: [
+          '--no-sandbox', 
+          '--disable-setuid-sandbox', 
+          '--disable-gpu', 
+          '--disable-dev-shm-usage',
+          '--ignore-certificate-errors', // 忽略 SSL 证书错误
+          '--ignore-certificate-errors-spki-list',
+          '--disable-web-security', // 禁用 web 安全策略
+          '--disable-features=IsolateOrigins,site-per-process', // 禁用站点隔离
+          '--disable-site-isolation-trials',
+          '--disable-popup-blocking', // 禁用弹窗阻止
+          '--disable-notifications', // 禁用通知
+          '--disable-default-apps', // 禁用默认应用
+          '--disable-extensions', // 禁用扩展
+          '--enable-features=NetworkService,NetworkServiceInProcess',
+          '--disable-features=SameSiteByDefaultCookies,CookiesWithoutSameSiteMustBeSecure', // 允许不安全的 Cookie
+          '--user-data-dir=/tmp/puppeteer' // 使用临时用户数据目录
+        ],
+        ignoreHTTPSErrors: true, // 忽略 HTTPS 错误
+        defaultViewport: { width: 1920, height: 1080 }, // 设置默认视口
+        acceptInsecureCerts: true // 接受不安全的证书
       });
     } catch (error) {
       if (error.message.includes('Could not find Chrome') || error.message.includes('Browser was not found')) {
@@ -93,11 +113,34 @@ class WebsiteScraper {
     try {
       const page = await browser.newPage();
       
-      // 设置用户代理
-      await page.setUserAgent('Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36');
+      // 简化日志，只保留关键信息
+      page.on('requestfailed', request => {
+        const failure = request.failure();
+        const errorText = failure ? failure.errorText : '未知错误';
+        console.log(`❌ 请求失败: ${request.url()} - ${errorText}`);
+      });
       
-      // 访问页面，等待网络空闲
-      await page.goto(url, { waitUntil: 'networkidle2', timeout: 30000 });
+      // 禁用浏览器安全功能，防止客户端阻止
+      await page.setBypassCSP(true); // 绕过内容安全策略
+      // Cookie 策略通过浏览器参数设置，而非 page 方法
+      
+      
+      // 设置更现代的 User-Agent
+      await page.setUserAgent('Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36');
+      
+      // 设置 HTTP 头
+      await page.setExtraHTTPHeaders({
+        'Accept-Language': 'zh-CN,zh;q=0.9,en;q=0.8',
+        'Referer': url,
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8'
+      });
+      
+      // 访问页面，使用更宽松的等待条件
+      await page.goto(url, { 
+        waitUntil: 'domcontentloaded', // 只等待 DOM 加载完成
+        timeout: 60000, // 延长超时时间
+        referer: url
+      });
       
       // 获取页面HTML
       const html = await page.content();

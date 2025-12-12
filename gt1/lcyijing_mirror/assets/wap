@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Yijing Mall</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="author" content="Yijing Mall" />
+<meta name="keywords" content="Liaocheng Yijing Trading Co., Ltd" />
+<meta name="description" content="Liaocheng Yijing Trading Co., Ltd" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<link href="/App/Tpl/Wap/Default/Public/css/swiper.css" rel="stylesheet" type="text/css" />
+<link href="/App/Tpl/Wap/Default/Public/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="/Public/jquery/jquery.min.js"></script>
+<script src="/App/Tpl/Wap/Default/Public/js/common.js" type="text/javascript"></script>
+<script src="/App/Tpl/Wap/Default/Public/js/swiper-3.4.2.jquery.min.js" type="text/javascript"></script>
+<script>
+	var params = {
+		Images: "/App/Tpl/Wap/Default/Public/images/",
+		EnableHtml: "1",
+		DeleteConfirm: "Are you sure to delete?",
+		AddCart: "Add to Cart", 
+		ViewCart: "View Cart",
+		CartContinue: "Continue", 
+		
+		DeleteCartUrl: "/Wap/public/deleteCart/l/en",
+		ClearCartUrl: "/Wap/public/clearCart/l/en",
+		AddCartUrl: "/Wap/public/addCart/l/en",
+		CartUrl: "/Wap/public/cart/l/en",
+		JsonUrl: "/Wap/public/getJson/l/en",
+		CheckoutUrl: "/Wap/public/checkout/l/en",
+		IncQuantityUrl: "/Wap/public/incQuantity/l/en",
+		DecQuantityUrl: "/Wap/public/decQuantity/l/en",
+		SetQuantityUrl: "/Wap/public/setQuantity/l/en",
+		TotalItemCount: "0",
+		ClearHistoryUrl: "/Wap/public/clearHistory/l/en",
+		
+		UserName: "user name", 
+		UserLogin: "User Login", 
+		UserReg: "User Registration", 
+		ForgetPassword: "Forget Password", 
+		MemberCenter: "Member Center",
+		MemberQuit: "Log out",
+		Login: "Login",
+		Reg: "Register",
+		
+		MemberID: "",
+		MemberName: "",
+		MemberUrl: "/member/public/index",
+		WapMemberUrl: "/member/mobile/index",
+		MemberLogoutUrl: "/member/public/logout",
+		MemberLoginUrl: "/Wap/public/login/l/en",
+		MemberRegUrl: "/Wap/public/reg/l/en",
+		MemberForgetUrl: "/Wap/public/forget/l/en"
+	};
+	
+	$(document).ready(function(e) {
+		ShowLoginBar(params);
+		setHistory(params);
+	});
+
+	function ShowLogin(){ window.location.href="/Wap/public/login/l/en"; }
+	function ShowReg(){ window.location.href="/Wap/public/reg/l/en"; }
+	function ShowForget(){ window.location.href="/Wap/public/forget/l/en"; }
+	function AddCart(id,type){ _addCart(id, params,type); }
+	function DeleteCart(id){ _deleteCart(id, params); }
+	function ClearCart(){ _clearCart(params); }
+	function StartCheckout(){_startCheckout(params); }
+	function Quantity(id, n, type){ _quantity(id, n, type, params); }
+</script>
+<script>
+	$(document).ready(function(e) {
+		pageInit();
+		function pageInit(){
+			if( "1" == 1 ){
+				$.get("/Wap/public/getJson/l/en", null, function(data){ UpdateLoginStatus(data['MemberID'], data['MemberName']); },"json");
+			}else{
+				UpdateLoginStatus("", "");
+			}
+		}
+		
+		function UpdateLoginStatus(id, name){
+			if( id ){
+				$("#tool .MemberCenter").attr("href", "/member/mobile/index");
+			}else{
+				$("#tool .MemberCenter").attr("href", "/Wap/public/login/l/en");
+			}
+		}
+	});
+</script>
+</head>
+<body class="body_index">
+    <!--Logo 开始-->
+    <div id="logo">
+       <div class="WebLogo"><a href="/Wap"><img src="/Upload/1765016929.png"  /></a></div>    </div>
+    <!--Logo 结束-->    
+<!--导航条 开始-->
+<div id="navigation">
+    <table cellspacing="1" cellpadding="0"  align="center">
+        <tr>            <td>
+            	<a  href="/wap/index.html"   class="current">Home</a>
+                            </td>
+                        <td>
+            	  
+                     <a href="/wap/toys.html"  >children's toys</a>            </td>
+                        <td>
+            	  
+                     <a href="/wap/jrtj.html"  >Cross-border</a>            </td>
+                        <td>
+            	  
+                     <a href="/wap/aboutus.html"  >About</a>            </td>
+            </tr>    </table>
+</div>
+<!--导航条 结束-->
+    
+<!--幻灯片 开始-->
+<div id="banner">
+        <ul class="swiper-wrapper">
+          <li class="swiper-slide">
+                                        <img src="/Upload/1764960188.jpg" />                        <div class="BannerText">
+                            <h2 class="BannerName animated fadeInDown"></h2>
+                            <div class="n1 BannerDescription"></div>
+                        </div>
+              </li><li class="swiper-slide">
+                                        <img src="/Upload/1764960240.jpg" />                        <div class="BannerText">
+                            <h2 class="BannerName animated fadeInDown"></h2>
+                            <div class="n2 BannerDescription"></div>
+                        </div>
+              </li><li class="swiper-slide">
+                                        <img src="/Upload/1764960253.jpg" />                        <div class="BannerText">
+                            <h2 class="BannerName animated fadeInDown"></h2>
+                            <div class="n3 BannerDescription"></div>
+                        </div>
+              </li>        </ul>
+        <div class="swiper-pagination"></div>
+    </div>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            var swiper = new Swiper( '#banner', {
+                pagination: '.swiper-pagination',
+                paginationClickable: true,       //是否切换到当前图片对应的li 添加事件
+                spaceBetween: 0,                 // 每个元素之间的 右外边距。 取值为number
+                centeredSlides: true,            // 设置元素位置  取值 true:居中 / 取值 false:居左
+                autoplay: 2500,                  //　自动轮播的间隔设置 单位 (ms)
+                autoplayDisableOnInteraction: false,  //设置滑动元素后是否自动轮播　取值 false 是启动 / 取值true 不启动
+            });
+        });
+    </script><!--幻灯片 结束-->
+
+<!--当前位置开始-->
+<!--当前位置结束-->
+    <div class="index">
+      
+        
+        <!--板块8 开始-->
+        <div class="index_3" id="index_3">
+        	<div class="left_title1">
+            	<h2><a href="/wap/toys.html" title="children's toys" target="_blank">children's toys</a></h2>
+                <p></p>
+                <a class="More" href="/wap/toys.html" title="children's toys" target="_blank">more>></a>
+            </div>
+            <div class="left_body1">
+                <ul class="gridlist2">
+                    <!--循环开始-->
+                    <li class="n0">
+                        	<a href="/wap/toys/1781.html" target="_blank" title="Toys 66" class="InfoPicture"><img src="/Upload/1750732261.jpg" title="Toys 66" alt="Toys 66" /></a>
+                        	<a href="/wap/toys/1781.html" target="_blank" title="Toys 66" class="InfoTitle">Toys 66</a>
+							<span class="InfoPrice">$23.29</span>                        </li><li class="n1">
+                        	<a href="/wap/toys/1780.html" target="_blank" title="Toys 65" class="InfoPicture"><img src="/Upload/1750732199.jpg" title="Toys 65" alt="Toys 65" /></a>
+                        	<a href="/wap/toys/1780.html" target="_blank" title="Toys 65" class="InfoTitle">Toys 65</a>
+							<span class="InfoPrice">$23.29</span>                        </li><li class="n0">
+                        	<a href="/wap/toys/1779.html" target="_blank" title="Toys 64" class="InfoPicture"><img src="/Upload/1750732134.jpg" title="Toys 64" alt="Toys 64" /></a>
+                        	<a href="/wap/toys/1779.html" target="_blank" title="Toys 64" class="InfoTitle">Toys 64</a>
+							<span class="InfoPrice">$23.29</span>                        </li><li class="n1">
+                        	<a href="/wap/toys/1777.html" target="_blank" title="Toys 62" class="InfoPicture"><img src="/Upload/1750731954.jpg" title="Toys 62" alt="Toys 62" /></a>
+                        	<a href="/wap/toys/1777.html" target="_blank" title="Toys 62" class="InfoTitle">Toys 62</a>
+							<span class="InfoPrice">$23.21</span>                        </li><li class="n0">
+                        	<a href="/wap/toys/1776.html" target="_blank" title="Toys 61" class="InfoPicture"><img src="/Upload/1750731888.jpg" title="Toys 61" alt="Toys 61" /></a>
+                        	<a href="/wap/toys/1776.html" target="_blank" title="Toys 61" class="InfoTitle">Toys 61</a>
+							<span class="InfoPrice">$23.40</span>                        </li><li class="n1">
+                        	<a href="/wap/toys/1775.html" target="_blank" title="Toys 56" class="InfoPicture"><img src="/Upload/1750730389.jpg" title="Toys 56" alt="Toys 56" /></a>
+                        	<a href="/wap/toys/1775.html" target="_blank" title="Toys 56" class="InfoTitle">Toys 56</a>
+							<span class="InfoPrice">$23.10</span>                        </li>                    <!--循环结束-->
+                </ul>
+            </div>
+            <div class="left_bottom1"></div>
+        </div>        <!--板块6  结束-->
+      
+        <!--板块5 开始-->
+	    <div class="index_5" id="index_5">
+        	<div class="left_title1">
+            	<h2><a href="/wap/jrtj.html" title="Cross-border" target="_blank">Cross-border</a></h2>
+                <p></p>
+                <a class="More" href="/wap/jrtj.html" title="Cross-border" target="_blank">more>></a>
+            </div>
+        	<div class="left_body2">
+            	<ul class="thumblist2 swiper-wrapper" >
+                    <!--循环开始-->
+                    <li class="swiper-slide">
+                            <a href="/wap/jrtj/1778.html" target="_blank">
+                                <img src="/Upload/1750732045.jpg" title="Chess supplies" alt="Chess supplies"/>
+                            </a>
+                            <div class="info_wrap">
+                                <a class="InfoTitle" href="/wap/jrtj/1778.html" target="_blank" title="Chess supplies">Chess supplies</a>
+                                <p> Chess supplies | No cards</p>
+                            </div>
+                        </li><li class="swiper-slide">
+                            <a href="/wap/jrtj/1729.html" target="_blank">
+                                <img src="/Upload/1750645190.jpg" title="Big Bottom 3" alt="Big Bottom 3"/>
+                            </a>
+                            <div class="info_wrap">
+                                <a class="InfoTitle" href="/wap/jrtj/1729.html" target="_blank" title="Big Bottom 3">Big Bottom 3</a>
+                                <p>| TPR | Already formed | Used for shoes</p>
+                            </div>
+                        </li><li class="swiper-slide">
+                            <a href="/wap/jrtj/1728.html" target="_blank">
+                                <img src="/Upload/1750645084.jpg" title="Big Bottom 2" alt="Big Bottom 2"/>
+                            </a>
+                            <div class="info_wrap">
+                                <a class="InfoTitle" href="/wap/jrtj/1728.html" target="_blank" title="Big Bottom 2">Big Bottom 2</a>
+                                <p>| TPR | Already formed | Used for shoes</p>
+                            </div>
+                        </li><li class="swiper-slide">
+                            <a href="/wap/jrtj/1727.html" target="_blank">
+                                <img src="/Upload/1750645003.jpg" title="Fabric  | Cloth+PU" alt="Fabric  | Cloth+PU"/>
+                            </a>
+                            <div class="info_wrap">
+                                <a class="InfoTitle" href="/wap/jrtj/1727.html" target="_blank" title="Fabric  | Cloth+PU">Fabric  | Cloth+PU</a>
+                                <p>
+PU, etc. | Cloth+PU, etc. | Coating | Non double-sided</p>
+                            </div>
+                        </li>                    <!--循环结束-->
+                </ul>
+            </div>
+        	<div class="left_bottom2"></div>
+        </div>
+        <!--板块5  结束--> 
+        <script>
+            var swiper = new Swiper('#index_5 .left_body2', {
+				lazyLoading: true,            //　启动赖加载
+                slidesPerView: 1.5,          // 显示元素的个数
+                centeredSlides: false,      //取值:false 元素居中 , 取值:true 元素居左
+                spaceBetween: 10,
+                lazyLoadingInPrevNext : true
+            });
+        </script>
+        <div class="clear"></div>
+    </div>
+    <!--版权 开始-->
+<div id="copyright">
+    <div class="bottom_navigation"></div>
+       <div class="Mobile"><a href="tel:+8618676394810">click free telephone to consult:+8618676394810</a></div>
+       <div class="Language">
+                <a href="/Wap?l=cn" ><img src="/App/Tpl/Wap/Default/Public/images/zw.gif" /></a>&#160;
+                <a href="/Wap?l=en" ><img src="/App/Tpl/Wap/Default/Public/images/english.gif" /></a>
+             </div>
+        <div class="bottom_copyright">
+            Yijing Mall&#160;&#160;            <a href="https://beian.miit.gov.cn" rel="nofollow" target="_blank"></a><br />                        Mobile:+8618676394810<br />            Address:Room 102, Ruyi Metal Products Co., Ltd., Renzhuang Village Industrial Park, Jiangguantun Street, Liaocheng Economic and Technological Development Zone, Shandong Province<br />           
+        </div></div>
+<!--版权 结束-->
+
+<div id="tool">
+    <ul class="toollist">
+    	<li><a  href="/wap/index.html" ><img src="/App/Tpl/Wap/Default/Public/images/system/home.png"><p>Home</p></a></li>
+        <li><a  href="tel:+8618676394810"><img src="/App/Tpl/Wap/Default/Public/images/system/tel.png"><p>one-click dial</p></a></li>
+        <li><a  href="/wap/toys.html"><img src="/App/Tpl/Wap/Default/Public/images/system/map.png"><p>children's toys</p></a></li>
+        <li>
+        	<a  href="/Wap/public/cart/l/en">
+                <div class="Cart"><img src="/App/Tpl/Wap/Default/Public/images/system/cart.png" /><i class="TotalItemCount"></i></div>
+                <p>Cart</p>
+            </a>
+        </li>
+        <li class="li4">
+            <a class="MemberCenter"  href='/Wap/public/login/l/en'>
+            	<img src="/App/Tpl/Wap/Default/Public/images/system/member.png" /><p>My</p>
+            </a>
+        </li>
+    </ul>
+</div>
+</body>
+</html>

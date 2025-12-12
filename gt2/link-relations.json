@@ -1,0 +1,60 @@
+{
+  "baseUrl": "https://example.com",
+  "baseDomain": "example.com",
+  "visitedUrls": [
+    "https://example.com",
+    "https://example.com/products",
+    "https://example.com/login",
+    "https://example.com/register",
+    "https://example.com/product/1",
+    "https://example.com/product/2",
+    "https://example.com/cart",
+    "https://example.com/checkout",
+    "https://example.com/order-confirm",
+    "https://example.com/user/orders",
+    "https://example.com/user/profile"
+  ],
+  "linkRelations": {
+    "https://example.com": [
+      "https://example.com/products",
+      "https://example.com/login",
+      "https://example.com/register"
+    ],
+    "https://example.com/products": [
+      "https://example.com/product/1",
+      "https://example.com/product/2"
+    ],
+    "https://example.com/login": [
+      "https://example.com/user/profile",
+      "https://example.com/cart"
+    ],
+    "https://example.com/register": [
+      "https://example.com/login"
+    ],
+    "https://example.com/product/1": [
+      "https://example.com/cart",
+      "https://example.com/products"
+    ],
+    "https://example.com/product/2": [
+      "https://example.com/cart",
+      "https://example.com/products"
+    ],
+    "https://example.com/cart": [
+      "https://example.com/checkout",
+      "https://example.com/products"
+    ],
+    "https://example.com/checkout": [
+      "https://example.com/order-confirm",
+      "https://example.com/cart"
+    ],
+    "https://example.com/order-confirm": [
+      "https://example.com/user/orders"
+    ],
+    "https://example.com/user/orders": [
+      "https://example.com/user/profile"
+    ],
+    "https://example.com/user/profile": [
+      "https://example.com/login"
+    ]
+  }
+}

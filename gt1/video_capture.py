@@ -33,6 +33,16 @@ class VideoCapture:
         frame_interval = 1.0 / self.config['frame_rate']
         
         print(f"开始捕获视频帧，帧率: {self.config['frame_rate']} fps")
+
+        # 在开始捕获前，尝试确保视频处于播放状态
+        try:
+            ensure_fn = getattr(self.browser_controller, "ensure_video_playing", None)
+            if callable(ensure_fn):
+                ok = ensure_fn(video_element, self.config.get("play_delay", 2))
+                if not ok:
+                    print("警告: 无法确认视频处于播放状态，将尝试继续截帧")
+        except Exception as e:
+            print(f"尝试启动视频播放时出错: {e}")
         
         for i in range(self.config['max_frames']):
             start_time = time.time()

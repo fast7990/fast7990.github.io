@@ -2,7 +2,7 @@
 
 # 目标网页配置
 TARGET_CONFIG = {
-    "url": "https://www.skylinewebcams.com/zh/webcam/italia/lazio/roma/piazza-di-spagna.html",  # 目标网页URL
+    "url": "https://www.skylinewebcams.com/zh/webcam/italia/lazio/roma/pantheon.html",  # 目标网页URL
     "container_id": "live",  # 包含video标签的div容器id
     "wait_time": 10,  # 等待页面加载的时间（秒）
     "play_delay": 2  # 等待视频开始播放的延迟（秒）
@@ -63,7 +63,18 @@ VISUALIZATION_CONFIG = {
 
 # 快照配置（保存带检测框的事件截图）
 SNAPSHOT_CONFIG = {
-    "enabled": True,               # 是否启用快照保存
-    "output_dir": "results/snaps", # 快照保存目录
-    "image_format": "jpg"          # 快照图片格式：jpg/png 等
+    "enabled": True,                # 是否启用快照保存
+    "output_dir": "results/snaps",  # 快照保存目录
+    "image_format": "jpg",          # 快照图片格式：jpg/png 等
+    "min_frame_gap": 30,            # 相邻两次快照之间至少间隔的帧数（例如 30 帧≈1 秒）
+    "min_center_shift": 20.0        # 画面目标整体中心点至少移动多少像素才认为有变化
+}
+
+# 本地视频文件配置
+LOCAL_VIDEO_CONFIG = {
+    "video_path": "videos/sample.mp4",  # 本地视频文件路径（相对或绝对路径）
+    "frame_rate": 30,                   # 处理帧率（会按此帧率从视频中采样）
+    "max_frames": 1000,                  # 最大处理帧数（0 表示处理全部）
+    "resize_width": 640,                 # 调整帧宽度（0 表示保持原尺寸）
+    "resize_height": 360                 # 调整帧高度（0 表示保持原尺寸）
 }

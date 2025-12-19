@@ -1,86 +1,72 @@
 #!/usr/bin/env python3
 """
-视频人物和车辆检测主程序
+本地视频文件人物和车辆检测主程序
 """
 
-import time
+import sys
 from datetime import datetime
 
 import cv2
 
 # 导入配置
 from config import (
-    TARGET_CONFIG,
     DETECTION_CONFIG,
-    BROWSER_CONFIG,
     VIDEO_CONFIG,
     EVENT_CONFIG,
     REPORT_CONFIG,
     VISUALIZATION_CONFIG,
     SNAPSHOT_CONFIG,
+    LOCAL_VIDEO_CONFIG,
 )
 
 # 导入模块
-from browser_controller import BrowserController
-from video_capture import VideoCapture
+from local_video_reader import LocalVideoReader
 from detector import Detector
 from event_recorder import EventRecorder
 from utils import setup_logger, ensure_directory, get_current_timestamp
 
 # 设置日志
-logger = setup_logger('main')
+logger = setup_logger('main_local_video')
+
 
 def main():
     """主函数"""
-    logger.info("===== 视频人物和车辆检测系统开始运行 =====")
+    logger.info("===== 本地视频人物和车辆检测系统开始运行 =====")
     
     # 记录开始时间
     start_time = datetime.now()
     
-    browser_controller = None
+    video_reader = None
     detector = None
     event_recorder = None
     
     try:
-        # 1. 初始化浏览器控制器
-        browser_controller = BrowserController(BROWSER_CONFIG)
-        browser_controller.launch_browser()
+        # 1. 获取视频文件路径（优先使用命令行参数，否则使用配置）
+        video_path = LOCAL_VIDEO_CONFIG['video_path']
+        if len(sys.argv) > 1:
+            video_path = sys.argv[1]
+            logger.info(f"使用命令行参数指定的视频文件: {video_path}")
+        else:
+            logger.info(f"使用配置文件中的视频路径: {video_path}")
         
-        # 2. 访问目标网页
-        browser_controller.navigate_to_url(TARGET_CONFIG['url'], TARGET_CONFIG['wait_time'])
-        
-        # 3. 定位视频元素
-        video_element = browser_controller.locate_video_element(TARGET_CONFIG['container_id'])
-        if not video_element:
-            logger.error("无法定位视频元素，程序退出")
-            return
-        
-        # 4. 确保视频正在播放
-        is_playing = browser_controller.ensure_video_playing(video_element, TARGET_CONFIG['play_delay'])
-        if not is_playing:
-            logger.warning("视频无法播放，将尝试继续捕获帧")
-        
-        # 5. 获取视频信息
-        video_info = browser_controller.get_video_info(video_element)
-        video_info['container_id'] = TARGET_CONFIG['container_id']
-        video_info['url'] = TARGET_CONFIG['url']
+        # 2. 初始化本地视频读取器
+        video_reader = LocalVideoReader(video_path, LOCAL_VIDEO_CONFIG)
+        video_info = video_reader.get_video_info()
+        video_info['source'] = 'local_file'
         logger.info(f"视频信息: {video_info}")
         
-        # 6. 初始化检测器
+        # 3. 初始化检测器
         detector = Detector(DETECTION_CONFIG)
         detection_info = detector.get_detection_info()
         
-        # 7. 初始化事件记录器
+        # 4. 初始化事件记录器
         event_recorder = EventRecorder(video_info, detection_info, EVENT_CONFIG)
         
-        # 8. 初始化视频捕获器
-        video_capture = VideoCapture(browser_controller, VIDEO_CONFIG)
-
-        # 8.1 确保快照输出目录存在
+        # 5. 确保快照输出目录存在
         if SNAPSHOT_CONFIG["enabled"]:
             ensure_directory(SNAPSHOT_CONFIG["output_dir"])
         
-        # 9. 定义帧处理回调函数
+        # 6. 定义帧处理回调函数
         #    使用闭包变量记录上一次生成快照时的帧号和目标整体中心位置，
         #    用于控制快照频率和判断目标是否发生明显移动
         last_snapshot_info = {
@@ -175,26 +161,30 @@ def main():
                     frame_number, object_type, confidence, bbox, snapshot_path
                 )
         
-        # 10. 开始捕获视频帧并处理
-        video_capture.capture_frames(video_element, process_frame)
+        # 7. 开始读取视频帧并处理
+        video_reader.read_frames(process_frame)
         
-        # 11. 强制写入所有事件
+        # 8. 强制写入所有事件
         event_recorder.flush()
         
-        # 12. 生成检测报告
+        # 9. 生成检测报告
         event_recorder.generate_report(REPORT_CONFIG)
         
-        # 13. 获取统计信息
+        # 10. 获取统计信息
         stats = event_recorder.get_statistics()
         logger.info(f"检测统计: {stats}")
         
-        # 14. 记录结束时间
+        # 11. 记录结束时间
         end_time = datetime.now()
         total_time = (end_time - start_time).total_seconds()
         logger.info(f"程序运行时间: {total_time:.2f} 秒")
         
-        logger.info("===== 视频人物和车辆检测系统运行完成 =====")
+        logger.info("===== 本地视频人物和车辆检测系统运行完成 =====")
         
+    except FileNotFoundError as e:
+        logger.error(f"视频文件不存在: {e}")
+        logger.info("使用方法: python main_local_video.py <视频文件路径>")
+        logger.info("或修改 config.py 中的 LOCAL_VIDEO_CONFIG['video_path']")
     except Exception as e:
         logger.error(f"程序运行出错: {e}", exc_info=True)
     
@@ -207,11 +197,12 @@ def main():
             event_recorder.flush()
             event_recorder.generate_report(REPORT_CONFIG)
         
-        # 关闭浏览器
-        if browser_controller:
-            browser_controller.close()
+        # 关闭视频文件
+        if video_reader:
+            video_reader.close()
         
         logger.info("所有资源已关闭")
+
 
 if __name__ == "__main__":
     main()

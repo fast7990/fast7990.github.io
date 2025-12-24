@@ -1,0 +1,552 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>轨迹模拟器 🚀</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: 'Arial', sans-serif;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+        color: white;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 30px;
+      }
+
+      .header h1 {
+        font-size: 2.5em;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.2em;
+        opacity: 0.9;
+      }
+
+      .simulator-container {
+        background: rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        max-width: 900px;
+        width: 100%;
+      }
+
+      .canvas-container {
+        position: relative;
+        margin-bottom: 30px;
+      }
+
+      #trajectoryCanvas {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 15px;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+        width: 100%;
+        height: 400px;
+      }
+
+      .controls {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+        margin-bottom: 20px;
+      }
+
+      .control-group {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 20px;
+        border-radius: 15px;
+      }
+
+      .control-group h3 {
+        margin-bottom: 15px;
+        font-size: 1.2em;
+      }
+
+      .slider-container {
+        margin-bottom: 15px;
+      }
+
+      .slider-container label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+      }
+
+      input[type='range'] {
+        width: 100%;
+        height: 8px;
+        border-radius: 4px;
+        background: rgba(255, 255, 255, 0.2);
+        outline: none;
+        -webkit-appearance: none;
+      }
+
+      input[type='range']::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: #ff6b6b;
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+      }
+
+      .value-display {
+        text-align: center;
+        font-size: 1.1em;
+        font-weight: bold;
+        margin-top: 5px;
+      }
+
+      .action-buttons {
+        display: flex;
+        gap: 15px;
+        justify-content: center;
+        margin-top: 20px;
+      }
+
+      button {
+        padding: 12px 30px;
+        border: none;
+        border-radius: 25px;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+      }
+
+      #fireButton {
+        background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+        color: white;
+      }
+
+      #fireButton:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255, 107, 107, 0.4);
+      }
+
+      #resetButton {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+
+      #resetButton:hover {
+        background: rgba(255, 255, 255, 0.3);
+      }
+
+      .stats {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .stat-item {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 10px;
+        text-align: center;
+      }
+
+      .stat-value {
+        font-size: 1.5em;
+        font-weight: bold;
+        color: #ffd93d;
+      }
+
+      .stat-label {
+        font-size: 0.9em;
+        opacity: 0.8;
+        margin-top: 5px;
+      }
+
+      @media (max-width: 768px) {
+        .controls {
+          grid-template-columns: 1fr;
+        }
+
+        .stats {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>🚀 炮弹轨迹模拟器</h1>
+      <p>调整参数，观察炮弹的完美抛物线轨迹！</p>
+    </div>
+
+    <div class="simulator-container">
+      <div class="canvas-container">
+        <canvas id="trajectoryCanvas"></canvas>
+      </div>
+
+      <div class="controls">
+        <div class="control-group">
+          <h3>🎯 发射参数</h3>
+
+          <div class="slider-container">
+            <label for="velocitySlider">初速度 (m/s)</label>
+            <input
+              type="range"
+              id="velocitySlider"
+              min="10"
+              max="100"
+              value="50"
+              step="1"
+            />
+            <div class="value-display" id="velocityValue">50 m/s</div>
+          </div>
+
+          <div class="slider-container">
+            <label for="angleSlider">发射角度 (°)</label>
+            <input
+              type="range"
+              id="angleSlider"
+              min="0"
+              max="90"
+              value="45"
+              step="1"
+            />
+            <div class="value-display" id="angleValue">45°</div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <h3>🌪️ 环境参数</h3>
+
+          <div class="slider-container">
+            <label for="windSlider">风速 (m/s)</label>
+            <input
+              type="range"
+              id="windSlider"
+              min="-20"
+              max="20"
+              value="0"
+              step="1"
+            />
+            <div class="value-display" id="windValue">0 m/s</div>
+          </div>
+
+          <div class="slider-container">
+            <label for="gravitySlider">重力加速度 (m/s²)</label>
+            <input
+              type="range"
+              id="gravitySlider"
+              min="1"
+              max="20"
+              value="9.8"
+              step="0.1"
+            />
+            <div class="value-display" id="gravityValue">9.8 m/s²</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-buttons">
+        <button id="fireButton">发射炮弹！</button>
+        <button id="resetButton">重置模拟</button>
+      </div>
+
+      <div class="stats">
+        <div class="stat-item">
+          <div class="stat-value" id="rangeValue">0 m</div>
+          <div class="stat-label">射程</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="maxHeightValue">0 m</div>
+          <div class="stat-label">最大高度</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-value" id="flightTimeValue">0 s</div>
+          <div class="stat-label">飞行时间</div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // 获取DOM元素
+      const canvas = document.getElementById('trajectoryCanvas');
+      const ctx = canvas.getContext('2d');
+
+      // 滑块和显示元素
+      const velocitySlider = document.getElementById('velocitySlider');
+      const angleSlider = document.getElementById('angleSlider');
+      const windSlider = document.getElementById('windSlider');
+      const gravitySlider = document.getElementById('gravitySlider');
+
+      const velocityValue = document.getElementById('velocityValue');
+      const angleValue = document.getElementById('angleValue');
+      const windValue = document.getElementById('windValue');
+      const gravityValue = document.getElementById('gravityValue');
+
+      // 统计数据显示
+      const rangeValue = document.getElementById('rangeValue');
+      const maxHeightValue = document.getElementById('maxHeightValue');
+      const flightTimeValue = document.getElementById('flightTimeValue');
+
+      // 按钮
+      const fireButton = document.getElementById('fireButton');
+      const resetButton = document.getElementById('resetButton');
+
+      // 模拟状态
+      let isSimulating = false;
+      let animationId = null;
+
+      // 初始化Canvas尺寸
+      function initCanvas() {
+        canvas.width = canvas.offsetWidth;
+        canvas.height = canvas.offsetHeight;
+      }
+
+      // 更新滑块显示值
+      function updateSliderDisplays() {
+        velocityValue.textContent = velocitySlider.value + ' m/s';
+        angleValue.textContent = angleSlider.value + '°';
+        windValue.textContent = windSlider.value + ' m/s';
+        gravityValue.textContent = gravitySlider.value + ' m/s²';
+      }
+
+      // 物理计算函数
+      function calculateTrajectory(v0, angle, wind, gravity) {
+        const angleRad = (angle * Math.PI) / 180;
+        const points = [];
+        const dt = 0.01; // 时间步长
+        let t = 0;
+        let x = 0;
+        let y = 0;
+
+        // 初始速度分量
+        let vx = v0 * Math.cos(angleRad) + wind;
+        let vy = v0 * Math.sin(angleRad);
+
+        while (y >= 0) {
+          x = vx * t;
+          y = vy * t - 0.5 * gravity * t * t;
+
+          if (y >= 0) {
+            points.push({ x, y, t });
+          }
+
+          t += dt;
+        }
+
+        return points;
+      }
+
+      // 计算统计数据
+      function calculateStats(points) {
+        if (points.length === 0)
+          return { range: 0, maxHeight: 0, flightTime: 0 };
+
+        const range = points[points.length - 1].x;
+        const flightTime = points[points.length - 1].t;
+
+        let maxHeight = 0;
+        points.forEach((point) => {
+          if (point.y > maxHeight) {
+            maxHeight = point.y;
+          }
+        });
+
+        return { range, maxHeight, flightTime };
+      }
+
+      // 绘制坐标系
+      function drawCoordinateSystem() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // 绘制网格
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+        ctx.lineWidth = 1;
+
+        const gridSize = 50;
+        for (let x = 0; x < canvas.width; x += gridSize) {
+          ctx.beginPath();
+          ctx.moveTo(x, 0);
+          ctx.lineTo(x, canvas.height);
+          ctx.stroke();
+        }
+
+        for (let y = 0; y < canvas.height; y += gridSize) {
+          ctx.beginPath();
+          ctx.moveTo(0, y);
+          ctx.lineTo(canvas.width, y);
+          ctx.stroke();
+        }
+
+        // 绘制坐标轴
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.5)';
+        ctx.lineWidth = 2;
+
+        // X轴（地面）
+        ctx.beginPath();
+        ctx.moveTo(0, canvas.height - 50);
+        ctx.lineTo(canvas.width, canvas.height - 50);
+        ctx.stroke();
+
+        // 坐标标签
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.font = '12px Arial';
+        ctx.fillText('距离 (m)', canvas.width - 60, canvas.height - 20);
+        ctx.fillText('高度 (m)', 20, 30);
+      }
+
+      // 绘制轨迹
+      function drawTrajectory(points) {
+        if (points.length === 0) return;
+
+        // 计算缩放比例
+        const maxX = points[points.length - 1].x;
+        const maxY = Math.max(...points.map((p) => p.y));
+
+        const scaleX = (canvas.width - 100) / Math.max(maxX, 100);
+        const scaleY = (canvas.height - 100) / Math.max(maxY, 50);
+        const scale = Math.min(scaleX, scaleY) * 0.8;
+
+        // 绘制轨迹线
+        ctx.strokeStyle = '#ff6b6b';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+
+        points.forEach((point, index) => {
+          const x = 50 + point.x * scale;
+          const y = canvas.height - 50 - point.y * scale;
+
+          if (index === 0) {
+            ctx.moveTo(x, y);
+          } else {
+            ctx.lineTo(x, y);
+          }
+        });
+
+        ctx.stroke();
+
+        // 绘制炮弹位置
+        if (points.length > 0) {
+          const lastPoint = points[points.length - 1];
+          const x = 50 + lastPoint.x * scale;
+          const y = canvas.height - 50 - lastPoint.y * scale;
+
+          // 绘制炮弹
+          ctx.fillStyle = '#ffd93d';
+          ctx.beginPath();
+          ctx.arc(x, y, 8, 0, Math.PI * 2);
+          ctx.fill();
+
+          // 绘制爆炸效果
+          ctx.strokeStyle = '#ff6b6b';
+          ctx.lineWidth = 2;
+          ctx.beginPath();
+          ctx.arc(x, y, 15, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+      }
+
+      // 动画模拟
+      function animateTrajectory(points) {
+        let currentFrame = 0;
+
+        function animate() {
+          if (currentFrame >= points.length) {
+            isSimulating = false;
+            return;
+          }
+
+          drawCoordinateSystem();
+
+          // 绘制已完成的轨迹
+          const currentPoints = points.slice(0, currentFrame + 1);
+          drawTrajectory(currentPoints);
+
+          currentFrame++;
+          animationId = requestAnimationFrame(animate);
+        }
+
+        animate();
+      }
+
+      // 开始模拟
+      function startSimulation() {
+        if (isSimulating) {
+          cancelAnimationFrame(animationId);
+        }
+
+        const v0 = parseFloat(velocitySlider.value);
+        const angle = parseFloat(angleSlider.value);
+        const wind = parseFloat(windSlider.value);
+        const gravity = parseFloat(gravitySlider.value);
+
+        const points = calculateTrajectory(v0, angle, wind, gravity);
+        const stats = calculateStats(points);
+
+        // 更新统计数据
+        rangeValue.textContent = stats.range.toFixed(1) + ' m';
+        maxHeightValue.textContent = stats.maxHeight.toFixed(1) + ' m';
+        flightTimeValue.textContent = stats.flightTime.toFixed(1) + ' s';
+
+        isSimulating = true;
+        animateTrajectory(points);
+      }
+
+      // 重置模拟
+      function resetSimulation() {
+        if (isSimulating) {
+          cancelAnimationFrame(animationId);
+          isSimulating = false;
+        }
+
+        drawCoordinateSystem();
+
+        // 重置统计数据
+        rangeValue.textContent = '0 m';
+        maxHeightValue.textContent = '0 m';
+        flightTimeValue.textContent = '0 s';
+      }
+
+      // 事件监听
+      window.addEventListener('resize', () => {
+        initCanvas();
+        if (!isSimulating) {
+          drawCoordinateSystem();
+        }
+      });
+
+      velocitySlider.addEventListener('input', updateSliderDisplays);
+      angleSlider.addEventListener('input', updateSliderDisplays);
+      windSlider.addEventListener('input', updateSliderDisplays);
+      gravitySlider.addEventListener('input', updateSliderDisplays);
+
+      fireButton.addEventListener('click', startSimulation);
+      resetButton.addEventListener('click', resetSimulation);
+
+      // 初始化
+      initCanvas();
+      updateSliderDisplays();
+      drawCoordinateSystem();
+
+      console.log('🚀 炮弹模拟器初始化完成！');
+      console.log('💡 提示：调整参数后点击"发射炮弹！"按钮开始模拟');
+    </script>
+  </body>
+</html>

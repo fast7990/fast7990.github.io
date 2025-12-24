@@ -4,6 +4,9 @@
   "main": "index.js",
   "scripts": {
     "test": "node tests/simulator.test.js",
+    "test:linked-list": "node tests/linked-list.test.js",
+    "test:all": "npm test && npm run test:linked-list",
+    "demo:linked-list": "node linked-list-demo.js",
     "test:advanced": "node scripts/test-runner.js",
     "test:verbose": "node scripts/test-runner.js --verbose",
     "test:report": "node scripts/test-runner.js && open test-report.html",

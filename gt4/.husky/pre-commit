@@ -1,1 +1,8 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🚀 运行自动化测试..."
+npm test
+
+echo "📝 运行代码格式化..."
 npx lint-staged

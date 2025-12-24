@@ -3,7 +3,10 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node tests/simulator.test.js",
+    "test:advanced": "node scripts/test-runner.js",
+    "test:verbose": "node scripts/test-runner.js --verbose",
+    "test:report": "node scripts/test-runner.js && open test-report.html",
     "prepare": "husky",
     "lint": "prettier --check .",
     "lint:fix": "prettier --write ."

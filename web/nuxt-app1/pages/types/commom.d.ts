@@ -1,3 +1,0 @@
-interface ApiResponse {
-  data: any[];
-}

@@ -10,6 +10,7 @@
       <!-- Desktop Navigation -->
       <div class="navbar-links" v-if="!isMobile">
         <router-link to="/" class="nav-link">首页</router-link>
+        <router-link to="/experiments" class="nav-link">趣味小实验</router-link>
         <a href="https://github.com/fast7990" target="_blank" class="nav-link">GitHub</a>
         <router-link to="/about" class="nav-link">关于</router-link>
       </div>
@@ -31,6 +32,7 @@
           </div>
           <div class="drawer-links">
             <router-link to="/" class="drawer-link" @click="toggleDrawer">首页</router-link>
+            <router-link to="/experiments" class="drawer-link" @click="toggleDrawer">趣味小实验</router-link>
             <a href="https://github.com/fast7990" target="_blank" class="drawer-link" @click="toggleDrawer">GitHub</a>
             <router-link to="/about" class="drawer-link" @click="toggleDrawer">关于</router-link>
           </div>

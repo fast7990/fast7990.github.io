@@ -1,0 +1,1 @@
+import{_ as a,o,b as n,s as r,g as t}from"./index-B-u88lVO.js";const l={__name:"GlassContainer",props:{hover:{type:Boolean,default:!1}},setup(e){return(s,c)=>(o(),n("div",{class:t(["glass-container",{"glass-container--hover":e.hover}])},[r(s.$slots,"default",{},void 0)],2))}},d=a(l,[["__scopeId","data-v-2f29003d"]]);export{d as G};

@@ -1,0 +1,1 @@
+import{t as e,w as o,L as t,E as r,$ as n}from"./index-MOXJYzzv.js";const l={__name:"GlassContainer",props:{hover:{type:Boolean,default:!1}},setup(s){return(a,d)=>(o(),t("div",{class:n(["glass-container",{"glass-container--hover":s.hover}])},[r(a.$slots,"default",{},void 0)],2))}},i=e(l,[["__scopeId","data-v-2f29003d"]]);export{i as p};

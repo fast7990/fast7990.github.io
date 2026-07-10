@@ -1,0 +1,1 @@
+import{a}from"./index-MOXJYzzv.js";function c(){const r=a(!1);return{copied:r,copy:async e=>{try{return await navigator.clipboard.writeText(e),r.value=!0,setTimeout(()=>{r.value=!1},2e3),!0}catch(t){return console.error("复制失败:",t),!1}}}}export{c};

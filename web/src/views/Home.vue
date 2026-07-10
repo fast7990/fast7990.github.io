@@ -18,6 +18,18 @@
         :style="{ animationDelay: `${index * 100}ms` }"
       />
     </div>
+
+    <!-- 联系方式区域 -->
+    <div class="contact-section">
+      <div class="contact-content">
+        <svg class="contact-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
+          <polyline points="22,6 12,13 2,6"/>
+        </svg>
+        <p class="contact-text">有任何意见或建议，请发送邮件至：</p>
+        <a href="mailto:fast7990@outlook.com" class="contact-email">fast7990@outlook.com</a>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -131,6 +143,82 @@ const tools = [
 @media (min-width: 1280px) {
   .tools-grid {
     grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+/* 联系方式区域 */
+.contact-section {
+  margin-top: var(--spacing-xl);
+  padding: var(--spacing-lg);
+  width: 100%;
+  max-width: 600px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-lg);
+  animation: fadeIn 0.8s ease 0.5s both;
+}
+
+.contact-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-sm);
+  text-align: center;
+}
+
+.contact-icon {
+  width: 40px;
+  height: 40px;
+  color: var(--primary-color);
+  margin-bottom: var(--spacing-xs);
+}
+
+.contact-text {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.contact-email {
+  font-size: 1.1rem;
+  font-weight: 500;
+  color: var(--secondary-color);
+  text-decoration: none;
+  background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+}
+
+.contact-email:hover {
+  background: rgba(6, 182, 212, 0.1);
+  -webkit-text-fill-color: var(--secondary-color);
+  box-shadow: 0 0 20px rgba(6, 182, 212, 0.3);
+}
+
+.contact-email:active {
+  transform: scale(0.98);
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .contact-section {
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+  }
+  
+  .contact-text {
+    font-size: 0.875rem;
+  }
+  
+  .contact-email {
+    font-size: 1rem;
+    word-break: break-all;
   }
 }
 

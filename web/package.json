@@ -9,11 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "vue": "^3.4.0",
-    "vue-router": "^4.2.0",
     "@tsparticles/vue3": "^3.0.0",
+    "markdown-it": "^14.3.0",
+    "qrcode": "^1.5.3",
     "tsparticles": "^3.0.0",
-    "qrcode": "^1.5.3"
+    "vue": "^3.4.0",
+    "vue-router": "^4.2.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",

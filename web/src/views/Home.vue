@@ -54,6 +54,12 @@ const tools = [
     title: '二维码生成',
     desc: '生成自定义样式的二维码',
     path: '/qrcode-generator'
+  },
+  {
+    icon: '📝',
+    title: 'Markdown 预览',
+    desc: '实时编辑与预览 Markdown 文档',
+    path: '/markdown-preview'
   }
 ]
 </script>

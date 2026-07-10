@@ -20,6 +20,16 @@ const routes = [
     path: '/qrcode-generator',
     name: 'qrcode-generator',
     component: () => import('../views/QrcodeGenerator.vue')
+  },
+  {
+    path: '/markdown-preview',
+    name: 'markdown-preview',
+    component: () => import('../views/MarkdownPreview.vue')
+  },
+  {
+    path: '/about',
+    name: 'about',
+    component: () => import('../views/About.vue')
   }
 ]
 

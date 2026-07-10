@@ -1,0 +1,98 @@
+/* 动画定义 */
+
+/* 淡入动画（从下方淡入） */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 发光动画 */
+@keyframes glow {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--primary-color);
+  }
+  50% {
+    box-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--secondary-color);
+  }
+}
+
+/* 脉冲动画 */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+/* 旋转加载动画 */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* 卡片入场动画（带 delay 支持） */
+@keyframes cardEnter {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* 路由过渡动画 - slide-fade */
+.slide-fade-enter-active {
+  transition: all 0.3s ease-out;
+}
+
+.slide-fade-leave-active {
+  transition: all 0.2s ease-in;
+}
+
+.slide-fade-enter-from {
+  opacity: 0;
+  transform: translateX(30px);
+}
+
+.slide-fade-leave-to {
+  opacity: 0;
+  transform: translateX(-30px);
+}
+
+/* 淡入淡出过渡 */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* 卡片入场工具类 */
+.card-enter {
+  animation: cardEnter 0.5s ease-out forwards;
+}
+
+/* 支持延迟的卡片入场 */
+.card-enter-delay-1 { animation-delay: 0.1s; opacity: 0; }
+.card-enter-delay-2 { animation-delay: 0.2s; opacity: 0; }
+.card-enter-delay-3 { animation-delay: 0.3s; opacity: 0; }
+.card-enter-delay-4 { animation-delay: 0.4s; opacity: 0; }
+.card-enter-delay-5 { animation-delay: 0.5s; opacity: 0; }
+.card-enter-delay-6 { animation-delay: 0.6s; opacity: 0; }

@@ -36,7 +36,7 @@
           <button class="btn-clear" @click="clearImage">清除</button>
         </div>
         <div class="preview-content">
-          <img :src="imagePreview" alt="预览图" class="preview-image" />
+          <img :src="imagePreview" :alt="imageInfo?.name || '图片预览'" class="preview-image" />
           <div class="file-info">
             <div class="info-item">
               <span class="info-label">文件名</span>

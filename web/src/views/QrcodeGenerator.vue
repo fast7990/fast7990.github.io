@@ -77,7 +77,7 @@
           </div>
           
           <div v-else-if="qrcodeDataUrl" class="qrcode-wrapper">
-            <img :src="qrcodeDataUrl" alt="QR Code" class="qrcode-image" />
+            <img :src="qrcodeDataUrl" :alt="content || '二维码'" class="qrcode-image" />
           </div>
           
           <div v-else class="empty-state">

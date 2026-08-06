@@ -1,0 +1,12 @@
+# 视频人物和车辆检测系统依赖库
+
+# 核心依赖
+ultralytics
+opencv-python
+numpy
+
+# 浏览器控制
+playwright
+
+# 工具库
+python-dotenv

@@ -1,0 +1,386 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml"><head>
+    <title>Culture|Liaocheng Yijing Trading Co., Ltd-Yijing Mall</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="author" content="Yijing Mall">
+<meta name="keywords" content="Liaocheng Yijing Trading Co., Ltd">
+<meta name="description" content="Liaocheng Yijing Trading Co., Ltd">
+<link href="favicon.ico" type="image/x-icon" rel="icon">
+<link href="favicon.ico" type="image/x-icon" rel="shortcut icon">
+<link href="App/Tpl/Home/Default/Public/css/style.css" rel="stylesheet" type="text/css">
+<script type="text/javascript" src="Public/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="App/Tpl/Home/Default/Public/js/common.js"></script>
+<script type="text/javascript" src="Public/jquery/layer/layer.js"></script>
+<script type="text/javascript" src="Public/jquery/jquery.SuperSlide.js"></script>
+<!--[if lte IE 6]>
+<script type="text/javascript" src="/App/Tpl/Home/Default/Public/js/minmax.js"></script>
+<script type="text/javascript" src="/App/Tpl/Home/Default/Public/js/pngfix.js"></script>
+<script language="javascript" type="text/javascript">EvPNG.fix("#logo img");</script>
+<![endif]-->
+<script>
+	$(document).ready(function(e) {
+		pageInit();
+		function pageInit(){
+			if( $("#top_1").length > 0 ){
+				if( "1" == 1 ){
+					$.get("/public/getJson/l/en", null, function(data){ UpdateLoginStatus(data['MemberID'], data['MemberName'], data['EnableMember']); },"json");
+				}else{
+					UpdateLoginStatus("", "", "1");
+				}
+			}
+		}
+		function UpdateLoginStatus(id, name, flag){
+			if(flag==0) return;
+			var html = "";
+			if( id ){
+				html += '<span class="MemberName">'+name+'&nbsp;</span>';
+				html += '<a href="/member/public/index" target="_blank">[Member Center]&nbsp;</a>';
+				html += '<a href="/member/public/logout" target="_self">[Log out]</a>';
+			}else{
+				html += '<a href="/public/login/l/en" target="_self">[Login]&nbsp;</a>';
+				html += '<a href="/public/reg/l/en" target="_self">[Register]&nbsp;</a>';
+			}
+			$("#top_1").html( html );
+		}
+	});
+</script>
+<script>
+	var params = {
+		Images: "/App/Tpl/Home/Default/Public/images/",
+		EnableHtml: "1",
+		DeleteConfirm: "Are you sure to delete?",
+		AddCart: "Add to Cart", 
+		ViewCart: "View Cart",
+		CartContinue: "Continue", 
+		
+		DeleteCartUrl: "/public/deleteCart/l/en",
+		ClearCartUrl: "/public/clearCart/l/en",
+		AddCartUrl: "/public/addCart/l/en",
+		CartUrl: "/public/cart/l/en",
+		JsonUrl: "/public/getJson/l/en",
+		CheckoutUrl: "/public/checkout/l/en",
+		IncQuantityUrl: "/public/incQuantity/l/en",
+		DecQuantityUrl: "/public/decQuantity/l/en",
+		SetQuantityUrl: "/public/setQuantity/l/en",
+		TotalItemCount: "0",
+		ClearHistoryUrl: "/public/clearHistory/l/en",
+		LoginUrl: "/public/login/l/en",
+		RegUrl: "/public/reg/l/en",
+		
+		UserName: "user name", 
+		UserLogin: "User Login", 
+		UserReg: "User Registration", 
+		ForgetPassword: "Forget Password", 
+		MemberCenter: "Member Center",
+		MemberQuit: "Log out",
+		Login: "Please Login",
+		Reg: "Free Register",
+		
+		MemberID: "",
+		MemberName: "",
+		MemberUrl: "/member/public/index",
+		MemberLogoutUrl: "/member/public/logout",
+		MemberLoginUrl: "/public/login/l/en",
+		MemberRegUrl: "/public/reg/l/en",
+		MemberForgetUrl: "/public/forget/l/en"
+	};
+	
+	$(document).ready(function(e) {
+		ShowLoginBar(params);
+		LazyLoad(params);
+		setHistory(params);
+	});
+
+	function ShowLogin(){ _showLogin( params ); }
+	function ShowReg(){ _showReg( params ); }
+	function ShowForget(){ _showForget( params); }
+	function AddCart(id,type){ _addCart(id, params,type); }
+	function DeleteCart(id){ _deleteCart(id, params); }
+	function ClearCart(){ _clearCart(params); }
+	function StartCheckout(){ _startCheckout(params); }
+	function Quantity(id, n, type){ _quantity(id, n, type, params); }
+</script>
+</head>
+<body class="body_single">
+	<!--顶部 开始-->
+<div id="top_main">
+	<div id="top">
+		<div id="top_1"></div>
+		<div id="top_2">
+            <a class="cart" target="_blank" href="public/cart/l/en.html">
+				<img src="/App/Tpl/Home/Default/Public/images/sidebar_cart_red.png">
+				<span class="MyShoppingCart">My Cart</span>
+				<span class="TotalItemCount"></span>
+			</a>
+            <a href="wap.html" target="_blank">
+                	<span class="MobileEdition">Mobile Edition&nbsp;</span>
+                </a>            <a href="index.html" target="_self">简体中文版&nbsp;</a>
+            	<a href="index.html" target="_self">English</a>		</div>
+	</div>
+</div>
+<!--顶部 结束-->
+<!--Logo 开始-->
+<div id="logo_main">
+    <div id="logo">
+		<!--网站Logo 开始-->
+		<div class="WebLogo">
+			<a href="index.html" target="_self">
+				<img src="/Upload/1765016929.png" title="Yijing Mall" alt="Yijing Mall">
+			 </a>
+		</div>     
+		<!--网站Logo 结束-->
+        <!--导航条 开始-->
+        <div id="navigation">
+            <ul class="navigationlist">
+                <li>
+                          
+                             <a href="index.html" target="_self">Home</a>                                            </li><li>
+                          
+                             <a href="toys.html" target="_self">children's toys</a>                                            </li><li>
+                          
+                             <a href="jrtj.html" target="_self">Cross-border</a>                                            </li><li>
+                        <a href="aboutus.html" target="_self" class="current">About</a>
+                                                <ul class="subnavigationlist">
+                               <li><a href="culture.html" target="_self">Culture</a></li><li><a href="honor.html" target="_self">Honor</a></li><li><a href="organization.html" target="_self">Organization</a></li><li><a href="video.html" target="_self">Video</a></li>                            </ul>                    </li>            </ul>
+        </div>
+        <!--导航条 结束-->
+    </div>
+</div>
+<!--Logo 结束-->
+	
+
+
+<!--JS幻灯片 开始-->
+<div id="banner_main">
+	<!--幻灯片 开始-->
+	<div id="banner">
+			 <ul class="bannerlist">
+				<li class="n1">
+													<img src="/Upload/1764960188.jpg">                        <div class="BannerText">
+                            <h2 class="animated fadeInDown"></h2>
+                            <p class="animated fadeInDownBig"></p>
+                        </div>
+					</li><li class="n2">
+													<img src="/Upload/1764960240.jpg">                        <div class="BannerText">
+                            <h2 class="animated fadeInDown"></h2>
+                            <p class="animated fadeInDownBig"></p>
+                        </div>
+					</li><li class="n3">
+													<img src="/Upload/1764960253.jpg">                        <div class="BannerText">
+                            <h2 class="animated fadeInDown"></h2>
+                            <p class="animated fadeInDownBig"></p>
+                        </div>
+					</li>			 </ul>
+	</div>
+	<div class="hd"><ul></ul></div>
+	<!--幻灯片 结束-->
+</div>
+<script>
+		if( $(".bannerlist li").length > 0 ){
+			$('#banner_main').slide({ titCell:'.hd ul', mainCell:'#banner ul', autoPlay:true, autoPage:true, delayTime:500, effect:'left'});
+			$(window).resize(function() {  CenterBanner(); });
+			$(document).ready(function(e) { CenterBanner(); });
+		}else{
+			$("#banner_main").hide();
+		}
+		
+		function CenterBanner(){
+			var imgWidth = parseInt( $(".bannerlist li img:first").width() );
+			if( imgWidth <= 0 ) return;
+			var winWidth = parseInt( $(window).width() );
+			var offset = parseInt( (winWidth-imgWidth)/2 );
+			$(".bannerlist li img").css("margin-left", offset+'px' );
+		}
+	</script>
+<!--JS幻灯片 结束-->
+<div id="logo"><div id="logo_1"> <form name="frmInfoSearch" method="post" action="/channel/search/l/en">
+	<div class="search">
+		<input name="Keywords" placeholder="please input keywords" class="btn-keywords" type="text" value="" maxlength="50">
+		<input class="btn-search" name="submit8" type="submit" value="Search">
+	</div>
+<input type="hidden" name="__hash__" value="668b39b1a7d782e6ad14ea197fc47f32_5e99b7bf72ea6d55e267dc7d1dd20f88"></form></div></div>
+    <!--主体内容 开始-->
+    <div class="single">
+        <div class="subchannel_main">
+		<div class="subchannel">
+			<ul class="subchannellist">
+				<li class="depth1" id="current">
+										<a href="culture.html">Culture</a></li>						<li class="depth1">					<a href="honor.html">Honor</a></li>						<li class="depth1">					<a href="organization.html">Organization</a></li>						<li class="depth1">					<a href="video.html">Video</a></li>			</ul>
+		</div>
+	</div>        <!--右侧区域 开始-->
+         <div id="right">
+                 <div class="right_title">
+                      <!--当前位置 开始-->
+<div id="location"><b>You are here：</b>
+<a href="index.html" target="_self">Home</a>
+    &nbsp;&gt;&gt;&nbsp;<a href="aboutus.html" target="_self">About</a>
+    &nbsp;&gt;&gt;&nbsp;<a href="culture.html" target="_self">Culture</a>
+    </div>
+<!--当前位置 结束-->
+                      <!--h2><img src="/App/Tpl/Home/Default/Public/images/title.png" align="absmiddle"  />Culture<img src="/App/Tpl/Home/Default/Public/images/title.png" align="absmiddle"  /></h2-->
+                </div>
+                <div class="right_body">
+                     <div class="ChannelContent"><p>
+	<strong><span closure_uid_503514901="1114" wd="null">Company slogan:</span></strong><br closure_uid_503514901="1358" wd="null">
+	<span closure_uid_503514901="1115" wd="null">Save time, worry</span><span closure_uid_503514901="1116" wd="null">,</span> <span class="hps" closure_uid_503514901="1117" wd="null">and effort</span> <span class="hps" closure_uid_503514901="1118" wd="null">to help</span> <span class="hps" closure_uid_503514901="1119" wd="null">you</span> <span class="hps" closure_uid_503514901="1120" wd="null">effectively</span> <span class="hps" closure_uid_503514901="1121" wd="null">network</span> <span class="hps" closure_uid_503514901="1122" wd="null">marketing</span><span closure_uid_503514901="1123" wd="null">.</span><br closure_uid_503514901="1359" wd="null">
+	<br closure_uid_503514901="1360" wd="null">
+	<br closure_uid_503514901="1361" wd="null">
+	<strong><span closure_uid_503514901="1124" wd="null">Company</span> <span class="hps" closure_uid_503514901="1125" wd="null">goals:</span></strong><br closure_uid_503514901="1362" wd="null">
+	<span closure_uid_503514901="1126" wd="null">To</span> <span class="hps" closure_uid_503514901="1127" wd="null">create</span> <span class="hps" closure_uid_503514901="1128" wd="null">the first brand</span> <span class="hps" closure_uid_503514901="1129" wd="null">of</span> <span class="hps" closure_uid_503514901="1130" wd="null">domestic</span> <span class="hps" closure_uid_503514901="1131" wd="null">marketing software</span><span closure_uid_503514901="1132" wd="null">.</span><br closure_uid_503514901="1363" wd="null">
+	<br closure_uid_503514901="1364" wd="null">
+	<br closure_uid_503514901="1365" wd="null">
+	<strong><span closure_uid_503514901="1133" wd="null">Company aim:</span></strong><br closure_uid_503514901="1366" wd="null">
+	<span closure_uid_503514901="1134" wd="null">The interests of customers</span><span closure_uid_503514901="1135" wd="null">,</span> <span class="hps" closure_uid_503514901="1136" wd="null">employees' interests</span><span closure_uid_503514901="1137" wd="null">,</span> <span class="hps" closure_uid_503514901="1138" wd="null">to</span> <span class="hps" closure_uid_503514901="1139" wd="null">maximize</span> <span class="hps" closure_uid_503514901="1140" wd="null">the</span> <span class="hps" closure_uid_503514901="1141" wd="null">interests of shareholders</span><span closure_uid_503514901="1142" wd="null">,</span> <span class="hps" closure_uid_503514901="1143" wd="null">that</span> <span class="hps" closure_uid_503514901="1144" wd="null">maximize</span> <span class="hps" closure_uid_503514901="1145" wd="null">the</span> <span class="hps" closure_uid_503514901="1146" wd="null">value of the company</span><span closure_uid_503514901="1147" wd="null">;</span><br closure_uid_503514901="1367" wd="null">
+	<span closure_uid_503514901="1148" wd="null">The interests of customers</span><span closure_uid_503514901="1149" wd="null">:</span> <span class="hps" closure_uid_503514901="1150" wd="null">the</span> <span class="hps" closure_uid_503514901="1151" wd="null">use of</span> <span class="hps" closure_uid_503514901="1152" wd="null">high-quality</span> <span class="hps" closure_uid_503514901="1153" wd="null">software</span><span closure_uid_503514901="1154" wd="null">,</span> <span class="hps" closure_uid_503514901="1155" wd="null">attentive service and</span> <span class="hps" closure_uid_503514901="1156" wd="null">professional</span> <span class="hps" closure_uid_503514901="1157" wd="null">consultation</span> <span class="hps" closure_uid_503514901="1158" wd="null">to improve</span> <span class="hps" closure_uid_503514901="1159" wd="null">competitiveness</span><span closure_uid_503514901="1160" wd="null">,</span> <span class="hps" closure_uid_503514901="1161" wd="null">enhance</span> <span class="hps" closure_uid_503514901="1162" wd="null">the image</span> <span class="hps" closure_uid_503514901="1163" wd="null">of</span> <span class="hps" closure_uid_503514901="1164" wd="null">individuals and businesses</span><span closure_uid_503514901="1165" wd="null">;</span><br closure_uid_503514901="1368" wd="null">
+	<span closure_uid_503514901="1166" wd="null">Employee</span> <span class="hps" closure_uid_503514901="1167" wd="null">benefits:</span> <span class="hps" closure_uid_503514901="1168" wd="null">pride,</span> <span class="hps" closure_uid_503514901="1169" wd="null">job satisfaction,</span> <span class="hps" closure_uid_503514901="1170" wd="null">the level of</span> <span class="hps" closure_uid_503514901="1171" wd="null">skills</span> <span class="hps" closure_uid_503514901="1172" wd="null">and</span> <span class="hps" closure_uid_503514901="1173" wd="null">experience</span> <span class="hps" closure_uid_503514901="1174" wd="null">to continuously improve and</span> <span class="hps" closure_uid_503514901="1175" wd="null">accumulation</span> <span class="hps" closure_uid_503514901="1176" wd="null">on the</span> <span class="hps" closure_uid_503514901="1177" wd="null">level</span> <span class="hps" closure_uid_503514901="1178" wd="null">of</span> <span class="hps" closure_uid_503514901="1179" wd="null">income</span> <span class="hps" closure_uid_503514901="1180" wd="null">in</span> <span class="hps" closure_uid_503514901="1181" wd="null">the</span> <span class="hps" closure_uid_503514901="1182" wd="null">same industry</span><span closure_uid_503514901="1183" wd="null">,</span> <span class="hps" closure_uid_503514901="1184" wd="null">a</span> <span class="hps" closure_uid_503514901="1185" wd="null">broad space for development</span><span closure_uid_503514901="1186" wd="null">;</span><br closure_uid_503514901="1369" wd="null">
+	<span closure_uid_503514901="1187" wd="null">Shareholders</span><span closure_uid_503514901="1188" wd="null">'</span> <span class="hps" closure_uid_503514901="1189" wd="null">interests</span><span closure_uid_503514901="1190" wd="null">:</span> <span class="hps" closure_uid_503514901="1191" wd="null">tangible</span> <span class="hps" closure_uid_503514901="1192" wd="null">and intangible</span> <span class="hps" closure_uid_503514901="1193" wd="null">investment income</span><span closure_uid_503514901="1194" wd="null">.</span><br closure_uid_503514901="1370" wd="null">
+	<br closure_uid_503514901="1371" wd="null">
+	<br closure_uid_503514901="1372" wd="null">
+	<strong><span closure_uid_503514901="1195" wd="null">Enterprise spirit:</span></strong><br closure_uid_503514901="1373" wd="null">
+	<span closure_uid_503514901="1196" wd="null">Dedication, integrity</span><span closure_uid_503514901="1197" wd="null">, responsibility</span><span closure_uid_503514901="1198" wd="null">,</span> <span class="hps" closure_uid_503514901="1199" wd="null">innovation</span><span closure_uid_503514901="1200" wd="null">;</span><br closure_uid_503514901="1374" wd="null">
+	<span closure_uid_503514901="1201" wd="null">Dedication</span><span closure_uid_503514901="1202" wd="null">:</span> <span class="hps" closure_uid_503514901="1203" wd="null">the</span> <span class="hps" closure_uid_503514901="1204" wd="null">quality</span> <span class="hps" closure_uid_503514901="1205" wd="null">of the</span> <span class="hps" closure_uid_503514901="1206" wd="null">software</span> <span class="hps" closure_uid_503514901="1207" wd="null">and services</span><span closure_uid_503514901="1208" wd="null">,</span> <span class="hps" closure_uid_503514901="1209" wd="null">to improve</span> <span class="hps" closure_uid_503514901="1210" wd="null">the</span> <span class="hps" closure_uid_503514901="1211" wd="null">level</span> <span class="hps" closure_uid_503514901="1212" wd="null">of</span> <span class="hps" closure_uid_503514901="1213" wd="null">user</span> <span class="hps" closure_uid_503514901="1214" wd="null">network</span> <span class="hps" closure_uid_503514901="1215" wd="null">marketing</span><span closure_uid_503514901="1216" wd="null">,</span> <span class="hps" closure_uid_503514901="1217" wd="null">we</span> <span class="hps" closure_uid_503514901="1218" wd="null">cherish</span> <span class="hps" closure_uid_503514901="1219" wd="null">this</span> <span class="hps" closure_uid_503514901="1220" wd="null">opportunity</span><span closure_uid_503514901="1221" wd="null">,</span> <span class="hps" closure_uid_503514901="1222" wd="null">and</span> <span class="hps" closure_uid_503514901="1223" wd="null">we</span> <span class="hps" closure_uid_503514901="1224" wd="null">respect</span> <span class="hps" closure_uid_503514901="1225" wd="null">this</span> <span class="hps" closure_uid_503514901="1226" wd="null">profession</span><span closure_uid_503514901="1227" wd="null">,</span> <span class="hps" closure_uid_503514901="1228" wd="null">and</span> <span class="hps" closure_uid_503514901="1229" wd="null">we are</span> <span class="hps" closure_uid_503514901="1230" wd="null">proud of</span><span closure_uid_503514901="1231" wd="null">;</span><br closure_uid_503514901="1375" wd="null">
+	<span closure_uid_503514901="1232" wd="null">Honesty:</span> <span class="hps" closure_uid_503514901="1233" wd="null">Sincerity</span> <span class="hps" closure_uid_503514901="1234" wd="null">to</span> <span class="hps" closure_uid_503514901="1235" wd="null">convince people</span><span closure_uid_503514901="1236" wd="null">,</span> <span class="hps" closure_uid_503514901="1237" wd="null">to</span> <span class="hps" closure_uid_503514901="1238" wd="null">the</span> <span class="hps" closure_uid_503514901="1239" wd="null">interests of the user</span> <span class="hps" closure_uid_503514901="1240" wd="null">to ensure</span> <span class="hps" closure_uid_503514901="1241" wd="null">the interests of the company</span> <span class="hps" closure_uid_503514901="1242" wd="null">to achieve</span> <span class="hps" closure_uid_503514901="1243" wd="null">economic benefits</span><span closure_uid_503514901="1244" wd="null">,</span> <span class="hps" closure_uid_503514901="1245" wd="null">social benefits</span><span closure_uid_503514901="1246" wd="null">;</span><br closure_uid_503514901="1376" wd="null">
+	<span closure_uid_503514901="1247" wd="null">Diligence</span><span closure_uid_503514901="1248" wd="null">:</span> <span class="hps" closure_uid_503514901="1249" wd="null">our software</span> <span class="hps" closure_uid_503514901="1250" wd="null">design</span><span closure_uid_503514901="1251" wd="null">,</span> <span class="hps" closure_uid_503514901="1252" wd="null">development</span><span closure_uid_503514901="1253" wd="null">,</span> <span class="hps" closure_uid_503514901="1254" wd="null">testing,</span> <span class="hps" closure_uid_503514901="1255" wd="null">implementation,</span> <span class="hps" closure_uid_503514901="1256" wd="null">all aspects of the</span> <span class="hps" closure_uid_503514901="1257" wd="null">service</span> <span class="hps" closure_uid_503514901="1258" wd="null">are</span> <span class="hps" closure_uid_503514901="1259" wd="null">diligent attention to detail</span><span closure_uid_503514901="1260" wd="null">;</span><br closure_uid_503514901="1377" wd="null">
+	<span closure_uid_503514901="1261" wd="null">Innovation:</span> <span class="hps" closure_uid_503514901="1262" wd="null">Innovation</span> <span class="hps" closure_uid_503514901="1263" wd="null">is the essence of</span> <span class="hps" closure_uid_503514901="1264" wd="null">creative destruction</span><span closure_uid_503514901="1265" wd="null">.</span> <span class="hps" closure_uid_503514901="1266" wd="null">Innovative</span> <span class="hps" closure_uid_503514901="1267" wd="null">ways to</span> <span class="hps" closure_uid_503514901="1268" wd="null">think creatively</span> <span class="hps" closure_uid_503514901="1269" wd="null">and</span> <span class="hps" closure_uid_503514901="1270" wd="null">explore</span><span closure_uid_503514901="1271" wd="null">.</span> <span class="hps" closure_uid_503514901="1272" wd="null">Only</span> <span class="hps" closure_uid_503514901="1273" wd="null">by</span> <span class="hps" closure_uid_503514901="1274" wd="null">constant</span> <span class="hps" closure_uid_503514901="1275" wd="null">self-denial</span><span closure_uid_503514901="1276" wd="null">,</span> <span class="hps" closure_uid_503514901="1277" wd="null">self-improvement</span><span closure_uid_503514901="1278" wd="null">,</span> <span class="hps" closure_uid_503514901="1279" wd="null">to</span> <span class="hps" closure_uid_503514901="1280" wd="null">create a</span> <span class="hps" closure_uid_503514901="1281" wd="null">valuable product</span><span closure_uid_503514901="1282" wd="null">,</span> <span class="hps" closure_uid_503514901="1283" wd="null">market</span><span closure_uid_503514901="1284" wd="null">,</span> <span class="hps" closure_uid_503514901="1285" wd="null">and</span> <span class="hps" closure_uid_503514901="1286" wd="null">service</span><span closure_uid_503514901="1287" wd="null">.</span><br closure_uid_503514901="1378" wd="null">
+	<br closure_uid_503514901="1379" wd="null">
+	<br closure_uid_503514901="1380" wd="null">
+	<strong><span closure_uid_503514901="1288" wd="null">Talent:</span></strong><br closure_uid_503514901="1381" wd="null">
+	<span closure_uid_503514901="1289" wd="null">Attitude is everything</span><span closure_uid_503514901="1290" wd="null">,</span> <span class="hps" closure_uid_503514901="1291" wd="null">details</span> <span class="hps" closure_uid_503514901="1292" wd="null">determine success or failure</span><span closure_uid_503514901="1293" wd="null">;</span><br closure_uid_503514901="1382" wd="null">
+	<span closure_uid_503514901="1294" wd="null">People-oriented</span><span closure_uid_503514901="1295" wd="null">.</span> <span class="hps" closure_uid_503514901="1296" wd="null">Respecting knowledge and</span> <span class="hps" closure_uid_503514901="1297" wd="null">personality</span><span closure_uid_503514901="1298" wd="null">;</span><br closure_uid_503514901="1383" wd="null">
+	<span closure_uid_503514901="1299" wd="null">CD</span> <span class="hps" closure_uid_503514901="1300" wd="null">performance</span><span closure_uid_503514901="1301" wd="null">,</span> <span class="hps" closure_uid_503514901="1302" wd="null">not</span> <span class="hps" closure_uid_503514901="1303" wd="null">only academic</span><span closure_uid_503514901="1304" wd="null">, not</span> <span class="hps" closure_uid_503514901="1305" wd="null">only</span> <span class="hps" closure_uid_503514901="1306" wd="null">qualifications</span><span closure_uid_503514901="1307" wd="null">,</span> <span class="hps" closure_uid_503514901="1308" wd="null">not</span> <span class="hps" closure_uid_503514901="1309" wd="null">the only</span> <span class="hps" closure_uid_503514901="1310" wd="null">past</span> <span class="hps" closure_uid_503514901="1311" wd="null">the credit</span><span closure_uid_503514901="1312" wd="null">;</span><br closure_uid_503514901="1384" wd="null">
+	<span closure_uid_503514901="1313" wd="null">Provide sufficient</span> <span class="hps" closure_uid_503514901="1314" wd="null">resources</span> <span class="hps" closure_uid_503514901="1315" wd="null">so</span> <span class="hps" closure_uid_503514901="1316" wd="null">that</span> <span class="hps" closure_uid_503514901="1317" wd="null">all</span> <span class="hps" closure_uid_503514901="1318" wd="null">employees</span> <span class="hps" closure_uid_503514901="1319" wd="null">can</span> <span class="hps" closure_uid_503514901="1320" wd="null">be</span> <span class="hps" closure_uid_503514901="1321" wd="null">most suited to their</span> <span class="hps" closure_uid_503514901="1322" wd="null">direction of</span> <span class="hps" closure_uid_503514901="1323" wd="null">development</span><span closure_uid_503514901="1324" wd="null">;</span><br closure_uid_503514901="1385" wd="null">
+	<span closure_uid_503514901="1325" wd="null">Encourage innovation</span><span closure_uid_503514901="1326" wd="null">,</span> <span class="hps atn" closure_uid_503514901="1327" wd="null">promote "</span><span closure_uid_503514901="1328" wd="null">performance</span><span closure_uid_503514901="1329" wd="null">"</span><span closure_uid_503514901="1330" wd="null">.</span> <span class="hps" closure_uid_503514901="1331" wd="null">A sound system</span><span closure_uid_503514901="1332" wd="null">,</span> <span class="hps" closure_uid_503514901="1333" wd="null">norms</span><span closure_uid_503514901="1334" wd="null">,</span> <span class="hps" closure_uid_503514901="1335" wd="null">from</span> <span class="hps" closure_uid_503514901="1336" wd="null">the</span> <span class="hps" closure_uid_503514901="1337" wd="null">person</span> <span class="hps" closure_uid_503514901="1338" wd="null">responsible for the</span> <span class="hps" closure_uid_503514901="1339" wd="null">progress</span> <span class="hps" closure_uid_503514901="1340" wd="null">to</span> <span class="hps" closure_uid_503514901="1341" wd="null">be responsible</span><span closure_uid_503514901="1342" wd="null">;</span><br closure_uid_503514901="1386" wd="null">
+	<span closure_uid_503514901="1343" wd="null">Encourage</span> <span class="hps" closure_uid_503514901="1344" wd="null">pondering</span> <span class="hps" closure_uid_503514901="1345" wd="null">things</span> <span class="hps atn" closure_uid_503514901="1346" wd="null">"</span><span closure_uid_503514901="1347" wd="null">oppose</span><span closure_uid_503514901="1348" wd="null">"</span> <span class="hps" closure_uid_503514901="1349" wd="null">pondering</span> <span class="hps atn" closure_uid_503514901="1350" wd="null">"</span><span closure_uid_503514901="1351" wd="null">will never allow</span> <span class="hps" closure_uid_503514901="1352" wd="null">any form of</span><span closure_uid_503514901="1353" wd="null">"</span> <span class="hps" closure_uid_503514901="1354" wd="null">office politics</span> <span class="hps atn" closure_uid_503514901="1355" wd="null">"</span><span closure_uid_503514901="1356" wd="null">.</span></p>
+</div>
+                </div>
+                                                 <div class="right_bottom"></div>
+         </div>
+         <!--右侧区域 结束-->
+         <div class="clear"></div>
+	</div>
+    <!--主体内容 结束-->
+	<!-- 友情链接 开始-->
+<div id="link_main">
+	<div id="link">
+      
+        <div class="link_body">
+              <div class="link_pic">
+                <ul>
+                    <!--循环开始-->
+                    <li>
+                                <a href="" target="_blank">
+                                    <img src="/Upload/1686819095.jpg" title="paypal" alt="paypal">
+                                </a>
+                            </li><li>
+                                <a href="" target="_blank">
+                                    <img src="/Upload/1686819075.jpg" title="VISA" alt="VISA">
+                                </a>
+                            </li><li>
+                                <a href="" target="_blank">
+                                    <img src="/Upload/1686819114.jpg" title="MASTER" alt="MASTER">
+                                </a>
+                            </li><li>
+                                <a href="" target="_blank">
+                                    <img src="/Upload/1686819127.jpg" title="CNOOC" alt="CNOOC">
+                                </a>
+                            </li><li>
+                                <a href="" target="_blank">
+                                    <img src="/Upload/1686819142.jpg" title="JCB" alt="JCB">
+                                </a>
+                            </li><li>
+                                <a href="" target="_blank">
+                                    <img src="/Upload/1686819152.jpg" title="EMS" alt="EMS">
+                                </a>
+                            </li><li>
+                                <a href="" target="_blank">
+                                    <img src="/Upload/1686819162.jpg" title="DHL" alt="DHL">
+                                </a>
+                            </li><li>
+                                <a href="" target="_blank">
+                                    <img src="/Upload/1686819174.jpg" title="fedex" alt="fedex">
+                                </a>
+                            </li><li>
+                                <a href="" target="_blank">
+                                    <img src="/Upload/1686819189.jpg" title="sofort" alt="sofort">
+                                </a>
+                            </li>                    <!--循环结束-->
+                </ul>
+          </div>
+              <div class="link_text">
+                <ul>
+                    <!--Link循环开始-->
+                                        <!--Link循环结束-->
+                </ul>
+            </div>
+        </div>
+         <div class="link_bottom"></div>
+     </div>
+</div>
+<!-- 友情链接 结束-->
+
+<div id="floor_7_main">
+	<div id="floor_7">
+		<div id="floor_7_1">
+        	<!-- 底部导航 开始-->
+			<div class="bottom_navigation">
+                <li>
+                        <a href="toys.html" target="_self">children's toys</a>
+                      	                    </li><li>
+                        <a href="jrtj.html" target="_self">Cross-border</a>
+                      	                    </li><li>
+                        <a href="aboutus.html" target="_self">About</a>
+                      	<ul class="subnavigationlist1">
+                                <li><a href="culture.html" target="_self">Culture</a></li><li><a href="honor.html" target="_self">Honor</a></li><li><a href="organization.html" target="_self">Organization</a></li><li><a href="video.html" target="_self">Video</a></li>                            </ul>                    </li>            </div>
+            <!-- 底部导航 结束-->
+		</div>
+		<div id="floor_7_2">
+        	<div class="contact_wrap">
+                <p>
+                    <b class="ico1">Mobile：</b>+8618676394810                                    </p>
+                <b class="ico3">Email：</b>18676394810@139.com<br>                <b class="ico4">Address：</b>Room 102, Ruyi Metal Products Co., Ltd., Renzhuang Village Industrial Park, Jiangguantun Street, Liaocheng Economic and Technological Development Zone, Shandong Province<br>            </div>
+            <div class="WeChat">
+                <img src="">
+                <div class="bdsharebuttonbox">
+            	<span class="LShare">WeChat scan concerns us：</span>
+            	<a href="culture.html" class="bds_more" data-cmd="more"></a>
+                <a href="culture.html" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+                <a href="culture.html" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+                <a href="culture.html" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>
+                <a href="culture.html" class="bds_renren" data-cmd="renren" title="分享到人人网"></a>
+                <a href="culture.html" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+            </div>
+			<script>
+				window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"24"},"share":{},
+				"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};
+				with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];
+			</script>
+            </div>
+		</div>
+	</div>
+    <!-- 底部版权 开始-->
+    <div id="copyright_main">
+        <div id="copyright">
+            
+            <span><a href="index.html" target="_self">Liaocheng Yijing Trading Co., Ltd</a>&nbsp;Copyright&nbsp;2022-2027&nbsp;<a href="https://beian.miit.gov.cn" rel="nofollow" target="_blank"></a>&nbsp;</span>
+        </div>
+    </div>
+</div>
+
+		<!--gotop start-->
+		<script type="text/javascript" src="Public/jquery/common.js"></script>
+		<script>
+			scrolltotop.controlattrs={offsetx:20, offsety:150};
+			scrolltotop.controlHTML = '<img src="/Public/Images/gotop/1.gif" />';
+			scrolltotop.anchorkeyword = '#gotop';
+			scrolltotop.title = 'Go Top';
+			scrolltotop.init();
+		</script>
+		<!--gotop end-->
+		
+
+
+
+<!-- 底部版权 结束-->
+<!--include file="Public:sidebar" /-->
+
+
+</body></html>

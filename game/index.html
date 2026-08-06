@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>推箱子游戏</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- 游戏页面 -->
+    <div class="game-container">
+        <!-- 头部区域 -->
+        <header class="game-header">
+            <h1 class="game-title">推箱子游戏</h1>
+            <div class="header-buttons">
+                <button id="btn-help" class="btn">说明</button>
+                <button id="btn-reset" class="btn">重置</button>
+                <button id="btn-levels" class="btn">关卡选择</button>
+            </div>
+        </header>
+
+        <!-- 主体区域 -->
+        <main class="game-main">
+            <!-- 游戏地图区 -->
+            <div id="game-map" class="game-map"></div>
+
+            <!-- 移动端虚拟控制区 -->
+            <div class="mobile-controls">
+                <button id="btn-up" class="control-btn up">↑</button>
+                <div class="control-row">
+                    <button id="btn-left" class="control-btn left">←</button>
+                    <button id="btn-down" class="control-btn down">↓</button>
+                    <button id="btn-right" class="control-btn right">→</button>
+                </div>
+            </div>
+        </main>
+
+        <!-- 底部区域 -->
+        <footer class="game-footer">
+            <div class="game-info">
+                <span id="level-info">关卡：1/10</span>
+                <span id="step-info">步数：0</span>
+            </div>
+            <div class="game-tip">
+                温馨提示：方向键控制移动，推所有箱子到目标点通关
+            </div>
+        </footer>
+    </div>
+
+    <!-- 通关弹窗 -->
+    <div id="win-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>恭喜通关！</h2>
+            <p>当前关卡步数：<span id="final-steps">0</span></p>
+            <div class="modal-buttons">
+                <button id="btn-next" class="btn">下一关</button>
+                <button id="btn-replay" class="btn">重玩</button>
+                <button id="btn-close-modal" class="btn btn-secondary">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 关卡选择弹窗 -->
+    <div id="levels-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>关卡选择</h2>
+            <div id="levels-list" class="levels-list"></div>
+            <button id="btn-close-levels" class="btn btn-secondary">关闭</button>
+        </div>
+    </div>
+
+    <!-- 操作说明弹窗 -->
+    <div id="help-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2>操作说明</h2>
+            <div class="help-content">
+                <h3>操作方式</h3>
+                <p>PC端：使用键盘方向键控制移动</p>
+                <p>移动端：点击虚拟方向按键控制移动</p>
+                
+                <h3>游戏元素</h3>
+                <div class="element-info">
+                    <div class="element-item">
+                        <div class="element-preview wall"></div>
+                        <span>墙</span>
+                    </div>
+                    <div class="element-item">
+                        <div class="element-preview box"></div>
+                        <span>箱子</span>
+                    </div>
+                    <div class="element-item">
+                        <div class="element-preview target"></div>
+                        <span>目标点</span>
+                    </div>
+                    <div class="element-item">
+                        <div class="element-preview player"></div>
+                        <span>玩家</span>
+                    </div>
+                    <div class="element-item">
+                        <div class="element-preview box-on-target"></div>
+                        <span>箱子在目标点</span>
+                    </div>
+                </div>
+                
+                <h3>游戏规则</h3>
+                <p>1. 玩家仅能在空白格子、目标点格子上移动</p>
+                <p>2. 玩家可向上下左右四个方向移动，推动前方的单个箱子</p>
+                <p>3. 箱子仅能被推到空白格子或目标点格子上</p>
+                <p>4. 所有箱子到达目标点后，当前关卡通关</p>
+            </div>
+            <button id="btn-close-help" class="btn btn-secondary">关闭</button>
+        </div>
+    </div>
+
+    <!-- JavaScript文件引用 -->
+    <script src="js/storage.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/level.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

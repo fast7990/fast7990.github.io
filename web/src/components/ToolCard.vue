@@ -1,5 +1,11 @@
 <template>
-  <router-link :to="path" class="tool-card">
+  <!-- 外部链接使用 a 标签，内部路由使用 router-link -->
+  <a v-if="external" :href="path" target="_blank" rel="noopener noreferrer" class="tool-card tx">
+    <div class="tool-card__icon">{{ icon }}</div>
+    <h3 class="tool-card__title">{{ title }}</h3>
+    <p class="tool-card__desc">{{ desc }}</p>
+  </a>
+  <router-link v-else :to="path" class="tool-card tc">
     <div class="tool-card__icon">{{ icon }}</div>
     <h3 class="tool-card__title">{{ title }}</h3>
     <p class="tool-card__desc">{{ desc }}</p>
@@ -23,6 +29,11 @@ defineProps({
   path: {
     type: String,
     required: true
+  },
+  // 是否为外部链接
+  external: {
+    type: Boolean,
+    default: false
   }
 })
 </script>

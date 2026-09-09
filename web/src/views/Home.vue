@@ -15,6 +15,7 @@
         :title="tool.title"
         :desc="tool.desc"
         :path="tool.path"
+        :external="tool.external"
         :style="{ animationDelay: `${index * 100}ms` }"
       />
     </div>
@@ -60,6 +61,20 @@ const tools = [
     title: 'Markdown 预览',
     desc: '实时编辑与预览 Markdown 文档',
     path: '/markdown-preview'
+  },
+  {
+    icon: '🗺️',
+    title: 'LifeMap 人生轨迹地图',
+    desc: '记录人生中的重要地点与轨迹',
+    path: 'https://fast7990.github.io/page/lifemap/index.html',
+    external: true
+  },
+  {
+    icon: '🌍',
+    title: '3D 数字地球',
+    desc: '交互式 3D 数字地球，探索全球数据可视化',
+    path: 'https://fast7990.github.io/page/earth3d/index.html',
+    external: true
   }
 ]
 </script>

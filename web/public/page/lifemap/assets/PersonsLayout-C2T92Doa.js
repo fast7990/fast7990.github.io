@@ -1,1 +1,0 @@
-import{_ as e,x as s,e as a,R as o,b as t}from"./index-Om_uvm83.js";const r={__name:"PersonsLayout",setup(_){return(c,n)=>(t(),s(a(o)))}},u=e(r,[["__scopeId","data-v-caf573b1"]]);export{u as default};

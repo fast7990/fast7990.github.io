@@ -31,14 +31,25 @@ function copyDirectory(src, dest) {
   }
 }
 
+function cleanDirectory(dir) {
+  if (fs.existsSync(dir)) {
+    fs.rmSync(dir, { recursive: true, force: true })
+    console.log(`Cleaned: ${dir}`)
+  }
+}
+
 function main() {
   console.log('distDir:', distDir)
   console.log('projectRoot:', projectRoot)
-  
+
   if (!fs.existsSync(distDir)) {
     console.error('Error: dist directory not found!')
     process.exit(1)
   }
+
+  // 清理旧的 assets 文件夹，避免残留旧文件
+  const assetsDir = path.join(targetDir, 'assets')
+  cleanDirectory(assetsDir)
 
   console.log('Copying build output to project root...')
   copyDirectory(distDir, targetDir)

@@ -75,6 +75,13 @@ const tools = [
     desc: '交互式 3D 数字地球，探索全球数据可视化',
     path: 'https://fast7990.github.io/page/earth3d/index.html',
     external: true
+  },
+  {
+    icon: '🤖',
+    title: '智言 AI',
+    desc: '集成 AI 助手的文档写作平台，AI 帮你总结 / 改写 / 续写',
+    path: 'https://zhiyan-174136-7-1369975123.sh.run.tcloudbase.com/',
+    external: true
   }
 ]
 </script>

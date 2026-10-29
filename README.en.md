@@ -1,8 +1,10 @@
 # Online Tools Collection
 
+[简体中文](./README.md) · **English**
+
 An online tools website built with Vue 3 + Vite, offering a variety of practical tools and fun frontend experiments, plus a few standalone static pages. Everything runs entirely in the browser — no backend server required.
 
-> Live site: [https://fast7990.github.io/](https://fast7990.github.io/) · [中文文档](./README.md)
+> Live site: [https://fast7990.github.io/](https://fast7990.github.io/)
 
 ## Practical Tools
 
@@ -14,8 +16,10 @@ An online tools website built with Vue 3 + Vite, offering a variety of practical
 | Markdown Preview | Edit and preview Markdown documents in real time | [#/markdown-preview](https://fast7990.github.io/#/markdown-preview) |
 | LifeMap | Record life's important places and journeys on a map | [page/lifemap/](https://fast7990.github.io/page/lifemap/) |
 | 3D Solar System | Interactive 3D solar system with camera control and time-speed adjustment | [page/earth3d/](https://fast7990.github.io/page/earth3d/) |
+| Zhiyan AI | AI-assisted document writing platform with summarize / rewrite / continue | [Live](https://zhiyan-174136-7-1369975123.sh.run.tcloudbase.com/) |
+| NovelGraph | Traceable Q&A and character-relationship knowledge graph for long novels, with cross-chapter retrieval, alias alignment, and citation lookup | [GitHub](https://github.com/fast7990/NovelGraph) |
 
-LifeMap and the 3D Solar System are standalone static pages under `page/`, independent of the main app.
+LifeMap and the 3D Solar System are standalone static pages under `page/`, independent of the main app; NovelGraph is a separate repository (Python backend + PostgreSQL/pgvector) that must be deployed and run locally.
 
 ## Fun Experiments
 

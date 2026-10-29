@@ -1,8 +1,10 @@
 # 在线工具集合
 
+**简体中文** · [English](./README.en.md)
+
 一个基于 Vue 3 + Vite 构建的在线工具网站，提供多种实用工具与趣味前端实验，并附带若干独立静态页面。所有功能均在浏览器端完成，无需后端服务器。
 
-> 访问地址：[https://fast7990.github.io/](https://fast7990.github.io/) · [English Docs](./README.en.md)
+> 访问地址：[https://fast7990.github.io/](https://fast7990.github.io/)
 
 ## 实用工具
 
@@ -14,8 +16,10 @@
 | Markdown 预览 | 实时编辑与预览 Markdown 文档 | [#/markdown-preview](https://fast7990.github.io/#/markdown-preview) |
 | LifeMap 人生轨迹地图 | 记录人生中的重要地点与轨迹 | [page/lifemap/](https://fast7990.github.io/page/lifemap/) |
 | 3D 太阳系模型 | 交互式 3D 太阳系，支持视角控制与时间流速调节 | [page/earth3d/](https://fast7990.github.io/page/earth3d/) |
+| 智言 AI | 集成 AI 助手的文档写作平台，AI 帮你总结 / 改写 / 续写 | [在线访问](https://zhiyan-174136-7-1369975123.sh.run.tcloudbase.com/) |
+| NovelGraph 长篇小说图谱 | 长篇小说的可溯源问答与人物关系知识图谱，支持跨章检索、别名对齐、引用回查 | [GitHub](https://github.com/fast7990/NovelGraph) |
 
-其中 LifeMap 与 3D 太阳系模型为独立静态页面，位于 `page/` 目录，不依赖主应用。
+其中 LifeMap 与 3D 太阳系模型为独立静态页面，位于 `page/` 目录，不依赖主应用；NovelGraph 为独立仓库（Python 后端 + PostgreSQL/pgvector），需本地部署运行。
 
 ## 趣味实验
 

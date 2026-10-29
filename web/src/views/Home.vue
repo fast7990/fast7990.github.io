@@ -82,6 +82,13 @@ const tools = [
     desc: '集成 AI 助手的文档写作平台，AI 帮你总结 / 改写 / 续写',
     path: 'https://zhiyan-174136-7-1369975123.sh.run.tcloudbase.com/',
     external: true
+  },
+  {
+    icon: '📚',
+    title: 'NovelGraph 长篇小说图谱',
+    desc: '长篇小说的可溯源问答与人物关系知识图谱',
+    path: 'https://github.com/fast7990/NovelGraph',
+    external: true
   }
 ]
 </script>

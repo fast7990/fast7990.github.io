@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@tsparticles/vue3": "^3.0.0",
+    "html2canvas": "^1.4.1",
+    "jspdf": "^4.2.1",
     "markdown-it": "^14.3.0",
     "qrcode": "^1.5.3",
     "tsparticles": "^3.0.0",

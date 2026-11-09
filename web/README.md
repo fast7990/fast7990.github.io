@@ -1,12 +1,24 @@
-# 在线工具集合
+# 在线工具集合 - 前端源码
 
-一个基于 Vue 3 + Vite 构建的在线工具网站，提供 JSON 格式化、图片转 Base64、二维码生成等实用工具。
+本站主应用的前端源码目录，基于 Vue 3 + Vite 构建。站点整体介绍与部署说明见[项目根目录 README](../README.md)。
 
 ## ✨ 功能特性
+
+### 实用工具
 
 - **JSON 格式化** - 格式化、压缩、校验 JSON 数据
 - **图片转 Base64** - 将图片转换为 Base64 编码，支持拖拽上传
 - **二维码生成** - 生成自定义样式的二维码，支持下载
+- **Markdown 预览** - 实时编辑与预览 Markdown 文档
+
+### 趣味实验
+
+- **粒子碰撞效果** - Canvas 粒子系统物理碰撞
+- **渐变色彩生成器** - 随机渐变方案，可导出 CSS 代码
+- **音频可视化** - Web Audio 频谱可视化
+- **3D 旋转立方体** - CSS 3D 变换
+- **波浪动画** - SVG 路径动画
+- **星空背景** - 动态闪烁星空
 
 ## 🎨 视觉效果
 
@@ -19,17 +31,15 @@
 
 - **框架**: Vue 3 (Composition API)
 - **构建工具**: Vite 5
-- **路由**: Vue Router 4
+- **路由**: Vue Router 4（Hash 模式）
 - **粒子效果**: tsparticles
 - **二维码**: qrcode
+- **Markdown**: markdown-it
 - **样式**: CSS3 + CSS Variables
 
 ## 📦 安装
 
 ```bash
-# 进入项目目录
-cd web
-
 # 安装依赖
 npm install
 ```
@@ -59,9 +69,19 @@ web/
 │   │   └── GlassContainer.vue # 毛玻璃容器组件
 │   ├── views/               # 页面视图
 │   │   ├── Home.vue          # 首页
+│   │   ├── About.vue         # 关于页
 │   │   ├── JsonFormatter.vue # JSON 格式化工具
 │   │   ├── ImageToBase64.vue # 图片转 Base64 工具
-│   │   └── QrcodeGenerator.vue # 二维码生成工具
+│   │   ├── QrcodeGenerator.vue # 二维码生成工具
+│   │   ├── MarkdownPreview.vue # Markdown 预览工具
+│   │   ├── Experiments.vue   # 趣味实验入口页
+│   │   └── experiments/      # 趣味实验页面
+│   │       ├── ParticleCollision.vue # 粒子碰撞
+│   │       ├── GradientGenerator.vue # 渐变色彩生成器
+│   │       ├── AudioVisualizer.vue   # 音频可视化
+│   │       ├── Cube3d.vue            # 3D 旋转立方体
+│   │       ├── WaveAnimation.vue     # 波浪动画
+│   │       └── StarryNight.vue       # 星空背景
 │   ├── composables/         # 组合式函数
 │   │   ├── useClipboard.js   # 剪贴板操作
 │   │   └── useResponsive.js  # 响应式断点检测
@@ -86,11 +106,12 @@ web/
 
 - 开发环境: http://localhost:5173
 - 预览环境: http://localhost:4173
+- 线上地址: https://fast7990.github.io/
 
 ## 📝 注意事项
 
 1. 所有工具功能均在浏览器端完成，无需后端服务器
-2. 构建产物会自动复制到项目根目录 (`e:\web\fast7990.github.io\`)
+2. 构建产物会自动复制到项目根目录，用于 GitHub Pages 部署
 3. 支持深色模式，视觉效果在暗色背景下最佳
 
 ## 📧 联系方式

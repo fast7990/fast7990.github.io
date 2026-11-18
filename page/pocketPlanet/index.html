@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>口袋星球 · Pocket Planet</title>
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 32 32%22><circle cx=%2216%22 cy=%2216%22 r=%2213%22 fill=%22%232a6fb0%22/><ellipse cx=%2216%22 cy=%2213%22 rx=%2210%22 ry=%224%22 fill=%22%234e9c46%22/></svg>" />
+  <style>
+    :root {
+      --glass: rgba(8, 18, 33, 0.72);
+      --glass-soft: rgba(8, 18, 33, 0.55);
+      --line: rgba(150, 190, 245, 0.28);
+      --text: #e8f1ff;
+      --muted: #9fb2cc;
+      --gold: #f5d68a;
+    }
+    html, body { margin: 0; padding: 0; overflow: hidden; background: #0b1026; }
+    canvas { display: block; }
+    body { font-family: system-ui, -apple-system, "Segoe UI", sans-serif; color: var(--text); }
+
+    /* 顶部品牌 + 进度 + 工具 */
+    #ui-top {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 20;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 24px; pointer-events: none;
+    }
+    .brand { display: flex; align-items: center; gap: 10px; line-height: 1.1; }
+    .brand .mark {
+      width: 26px; height: 26px; border: 1.5px solid var(--gold); border-radius: 50%;
+      position: relative; transform: rotate(-24deg);
+    }
+    .brand .mark::after {
+      content: ""; position: absolute; inset: 6px -5px;
+      border: 1.2px solid var(--gold); border-radius: 50%; opacity: .75;
+    }
+    .brand b { font-size: 14px; letter-spacing: 3px; font-weight: 600; }
+    .brand small { display: block; font-size: 9px; letter-spacing: 2px; color: var(--muted); font-weight: 400; }
+    #ui-progress {
+      position: absolute; left: 44%; top: 18px; transform: translateX(-50%);
+      padding: 8px 18px; background: var(--glass); border: 1px solid var(--line);
+      border-radius: 999px; font-size: 13px; letter-spacing: 1px; pointer-events: auto;
+      cursor: pointer; transition: background .15s;
+    }
+    #ui-progress:hover { background: rgba(20, 38, 64, .9); }
+    #ui-progress b { color: var(--gold); font-weight: 600; }
+    #ui-tools { display: flex; gap: 8px; pointer-events: auto; position: relative; z-index: 2; }
+    .tool {
+      width: 34px; height: 34px; border-radius: 50%; border: 1px solid var(--line);
+      background: var(--glass); color: var(--text); font-size: 14px; cursor: pointer;
+      display: grid; place-items: center; transition: background .15s, border-color .15s;
+    }
+    .tool:hover { background: rgba(20, 38, 64, .92); border-color: var(--gold); }
+
+    /* 左侧岛屿卡 */
+    #ui-region {
+      position: fixed; left: 24px; bottom: 92px; z-index: 15;
+      padding: 16px 20px; min-width: 190px;
+      background: linear-gradient(135deg, rgba(8,18,33,.82), rgba(8,18,33,.5));
+      border-left: 2px solid var(--gold); border-radius: 4px 12px 12px 4px;
+      pointer-events: none;
+    }
+    #region-eyebrow { font-size: 10px; letter-spacing: 3px; color: var(--muted); }
+    #region-name { font-size: 26px; font-weight: 500; letter-spacing: 1px; margin: 4px 0 2px; }
+    #region-cn { font-size: 12px; color: var(--muted); letter-spacing: 2px; }
+    #region-weather {
+      margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--line);
+      font-size: 12px; display: flex; align-items: center; gap: 8px; color: var(--text);
+    }
+    #region-weather .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+    #region-timer { margin-left: auto; font-size: 11px; color: var(--muted); }
+
+    /* 右侧下一站 */
+    #ui-next {
+      position: fixed; right: 24px; top: 76px; z-index: 15;
+      padding: 10px 14px; background: var(--glass); border: 1px solid var(--line);
+      border-radius: 10px; font-size: 12px; color: var(--muted); pointer-events: auto;
+      cursor: pointer; max-width: 190px; transition: background .15s;
+    }
+    #ui-next:hover { background: rgba(20, 38, 64, .92); }
+    #ui-next b { display: block; color: var(--gold); font-weight: 500; font-size: 13px; margin-top: 3px; }
+
+    /* 底部交互提示 */
+    #interact-hint {
+      position: fixed; left: 50%; bottom: 15%; transform: translateX(-50%); z-index: 15;
+      padding: 10px 20px; background: var(--glass); color: var(--gold);
+      border: 1px solid rgba(245, 214, 138, .45); border-radius: 22px;
+      font-size: 14px; letter-spacing: 1px; opacity: 0; transition: opacity .15s;
+      pointer-events: none; white-space: nowrap;
+    }
+    #interact-hint kbd {
+      display: inline-grid; place-items: center; min-width: 22px; height: 22px;
+      border: 1px solid var(--gold); border-radius: 5px; margin-right: 6px; font-size: 12px;
+    }
+
+    /* 底部键位条 */
+    #ui-help {
+      position: fixed; bottom: 16px; left: 50%; transform: translateX(-50%); z-index: 15;
+      display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;
+      padding: 8px 16px; background: var(--glass-soft); border-radius: 8px;
+      font-size: 11px; color: var(--muted); pointer-events: none; max-width: 92vw;
+    }
+    #ui-help span { white-space: nowrap; }
+    #ui-help kbd {
+      font: inherit; color: var(--text); border: 1px solid var(--line);
+      border-radius: 4px; padding: 1px 5px; margin-right: 3px;
+    }
+
+    /* 左下调试条 */
+    #ui-debug {
+      position: fixed; bottom: 16px; left: 16px; z-index: 15;
+      padding: 4px 10px; background: var(--glass-soft); color: #8fe3a8;
+      border-radius: 8px; font: 11px/1.5 Consolas, monospace;
+      pointer-events: none; white-space: nowrap;
+    }
+
+    /* toast 提示 */
+    #ui-toast {
+      position: fixed; top: 84px; left: 50%; transform: translateX(-50%) translateY(-8px);
+      z-index: 40; padding: 10px 22px; background: var(--glass);
+      border: 1px solid var(--gold); border-radius: 999px; color: var(--gold);
+      font-size: 13px; letter-spacing: 1px; opacity: 0; transition: opacity .25s, transform .25s;
+      pointer-events: none; white-space: nowrap;
+    }
+    #ui-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* 遮罩面板（引导 / 手记） */
+    .overlay {
+      position: fixed; inset: 0; z-index: 60; display: none;
+      align-items: center; justify-content: center;
+      background: rgba(4, 10, 22, .72); backdrop-filter: blur(4px);
+    }
+    .overlay.show { display: flex; }
+    .panel {
+      position: relative; width: min(560px, 90vw); max-height: 84vh; overflow-y: auto;
+      padding: 40px 44px; background: rgba(10, 22, 40, .96);
+      border: 1px solid var(--line); border-radius: 16px;
+    }
+    .panel .close {
+      position: absolute; top: 16px; right: 18px; width: 28px; height: 28px;
+      border: 1px solid var(--line); border-radius: 50%; background: none;
+      color: var(--muted); cursor: pointer; font-size: 16px;
+    }
+    .panel h1 { font-size: 30px; font-weight: 500; letter-spacing: 2px; margin: 0 0 6px; }
+    .panel h2 { font-size: 22px; font-weight: 500; letter-spacing: 1px; margin: 0 0 14px; }
+    .panel .eyebrow { font-size: 11px; letter-spacing: 4px; color: var(--gold); margin-bottom: 12px; }
+    .panel p { font-size: 14px; line-height: 1.9; color: var(--muted); margin: 10px 0; }
+    .panel .keys {
+      margin: 22px 0; padding: 16px; border: 1px solid var(--line); border-radius: 10px;
+      display: grid; grid-template-columns: auto 1fr; gap: 10px 16px; font-size: 12px; align-items: center;
+    }
+    .panel .keys kbd {
+      font: inherit; color: var(--gold); border: 1px solid var(--line);
+      border-radius: 4px; padding: 2px 7px; white-space: nowrap;
+    }
+    .btn {
+      padding: 10px 22px; background: var(--gold); color: #1a1a10; border: none;
+      border-radius: 999px; font-size: 13px; font-weight: 600; cursor: pointer; letter-spacing: 1px;
+    }
+    .btn.ghost { background: transparent; color: var(--muted); border: 1px solid var(--line); }
+    .atlas-row {
+      display: flex; align-items: center; gap: 12px; padding: 10px 0;
+      border-bottom: 1px solid var(--line); font-size: 13px;
+    }
+    .atlas-row .mark { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--muted); }
+    .atlas-row.done .mark { background: var(--gold); border-color: var(--gold); }
+    .atlas-row .name { color: var(--text); }
+    .atlas-row .island { margin-left: auto; color: var(--muted); font-size: 11px; }
+    .dest-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+    .dest-btn {
+      padding: 10px 12px; background: rgba(255,255,255,.03); border: 1px solid var(--line);
+      border-radius: 8px; color: var(--text); cursor: pointer; font-size: 12px; text-align: left;
+    }
+    .dest-btn:hover { background: rgba(245, 214, 138, .12); border-color: var(--gold); }
+    .dest-btn small { display: block; color: var(--muted); margin-top: 3px; font-size: 10px; }
+
+    #ui-error {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 999;
+      padding: 10px 16px; background: #b3261e; color: #fff;
+      font: 13px/1.5 Consolas, monospace; display: none; white-space: pre-wrap;
+    }
+  </style>
+  <script type="module" crossorigin src="./assets/index-DIU51SpN.js"></script>
+</head>
+<body>
+  <div id="ui-top">
+    <div class="brand"><span class="mark"></span><span><b>口袋星球</b><small>A POCKET ADVENTURE</small></span></div>
+    <div id="ui-progress" title="打开奇迹手记"><b>0 / 7</b> 小小奇迹</div>
+    <div id="ui-tools">
+      <button class="tool" id="btn-atlas" title="奇迹手记">✦</button>
+      <button class="tool" id="btn-reset" title="全部归零">↺</button>
+      <button class="tool" id="btn-help" title="旅途指南">?</button>
+    </div>
+  </div>
+
+  <div id="ui-next" title="打开目的地列表">✧ 下一站，去哪里？<b>自由探索</b></div>
+
+  <div id="ui-region">
+    <div id="region-eyebrow">ISLAND · 01</div>
+    <div id="region-name">北境</div>
+    <div id="region-cn">北境微光</div>
+    <div id="region-weather"><span class="dot"></span><span id="region-state">晴天</span><span id="region-timer"></span></div>
+  </div>
+
+  <div id="interact-hint"></div>
+  <div id="ui-toast"></div>
+  <div id="ui-help">
+    <span><kbd>WASD</kbd>行走 / 划船</span>
+    <span><kbd>Shift</kbd>奔跑</span>
+    <span><kbd>Space</kbd>跳跃</span>
+    <span><kbd>E</kbd>点亮 / 关闭</span>
+    <span><kbd>M</kbd>总览</span>
+    <span><kbd>R</kbd>镜头归位</span>
+    <span>拖动环视</span><span>滚轮缩放</span>
+  </div>
+  <div id="ui-debug"></div>
+  <div id="ui-error"></div>
+
+  <!-- 开场引导 -->
+  <div class="overlay show" id="overlay-intro">
+    <div class="panel">
+      <div class="eyebrow">LITTLE PLANET</div>
+      <h1>把世界，慢慢走一遍。</h1>
+      <p>七种风景，七个值得停留的瞬间。<br>各岛天气独立变化，每分钟换一种心情。</p>
+      <p>沿着小径走近闪光的标记，按 E 唤醒风景。走进海里会自动乘船，靠岸后继续步行。</p>
+      <div class="keys">
+        <kbd>W A S D</kbd><span>行走 / 划船</span>
+        <kbd>Shift / Space</kbd><span>奔跑 / 跳跃</span>
+        <kbd>E</kbd><span>点亮 / 关闭奇迹</span>
+        <kbd>M / R</kbd><span>星球总览 / 镜头归位</span>
+        <kbd>拖动 / 滚轮</kbd><span>环视 / 拉近拉远</span>
+      </div>
+      <p style="font-size:12px">旅途会自动保存。</p>
+      <button class="btn" id="btn-start">开始漫游</button>
+    </div>
+  </div>
+
+  <!-- 奇迹手记 -->
+  <div class="overlay" id="overlay-atlas">
+    <div class="panel">
+      <button class="close" data-close="overlay-atlas">×</button>
+      <div class="eyebrow">A TRAVELLER'S FIELD NOTES</div>
+      <h2>奇迹手记</h2>
+      <div id="atlas-list"></div>
+    </div>
+  </div>
+
+  <!-- 旅途指南 -->
+  <div class="overlay" id="overlay-help">
+    <div class="panel">
+      <button class="close" data-close="overlay-help">×</button>
+      <div class="eyebrow">TRAVELLER'S GUIDE</div>
+      <h2>旅途指南</h2>
+      <p>不必着急。沿着小径走近闪光的标记，按 E 唤醒风景。<br>每个岛每分钟随机轮换晴天、阴天或雷雨。</p>
+      <div class="keys">
+        <kbd>W A S D</kbd><span>行走 / 划船</span>
+        <kbd>Shift / Space</kbd><span>奔跑 / 跳跃</span>
+        <kbd>E</kbd><span>开启 / 关闭，保留发现记录</span>
+        <kbd>M / R</kbd><span>星球总览 / 镜头回到身后</span>
+        <kbd>拖动 / 滚轮</kbd><span>环视 / 拉近与拉远</span>
+      </div>
+      <p style="font-size:12px">右上 ↺ 可全部归零。</p>
+    </div>
+  </div>
+
+  <!-- 目的地 -->
+  <div class="overlay" id="overlay-dest">
+    <div class="panel">
+      <button class="close" data-close="overlay-dest">×</button>
+      <div class="eyebrow">WHERE TO NEXT</div>
+      <h2>下一站，去哪里？</h2>
+      <p>选择一处风景，跟随星光漫步前往。随时按方向键自由探索。</p>
+      <div class="dest-grid" id="dest-grid"></div>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -77,6 +77,13 @@ const tools = [
     external: true
   },
   {
+    icon: '🪐',
+    title: '口袋星球 Pocket Planet',
+    desc: '球面漫游小游戏，走访七座岛屿点亮七个奇迹',
+    path: 'https://fast7990.github.io/page/pocketPlanet/index.html',
+    external: true
+  },
+  {
     icon: '🤖',
     title: '智言 AI',
     desc: '集成 AI 助手的文档写作平台，AI 帮你总结 / 改写 / 续写',

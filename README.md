@@ -19,7 +19,28 @@
 | 智言 AI | 集成 AI 助手的文档写作平台，AI 帮你总结 / 改写 / 续写 | [在线访问](https://zhiyan-174136-7-1369975123.sh.run.tcloudbase.com/) |
 | NovelGraph 长篇小说图谱 | 长篇小说的可溯源问答与人物关系知识图谱，支持跨章检索、别名对齐、引用回查 | [GitHub](https://github.com/fast7990/NovelGraph) |
 
-其中 LifeMap 与 3D 太阳系模型为独立静态页面，位于 `page/` 目录，不依赖主应用；NovelGraph 为独立仓库（Python 后端 + PostgreSQL/pgvector），需本地部署运行。
+其中 LifeMap、3D 太阳系模型与口袋星球为独立静态页面，位于 `page/` 目录，不依赖主应用；NovelGraph 为独立仓库（Python 后端 + PostgreSQL/pgvector），需本地部署运行。
+
+## 小游戏
+
+| 游戏 | 说明 | 访问路径 |
+|------|------|----------|
+| 口袋星球 Pocket Planet | 用 Three.js 制作的球面漫游小游戏：在直径 100 单位的小星球上徒步、划船，走访七座各有风景的岛屿，点亮七个奇迹 | [page/pocketPlanet/](https://fast7990.github.io/page/pocketPlanet/) |
+
+**口袋星球**：纯前端实现，无框架、无外部模型与贴图资源，地形、植被、奇迹模型、粒子与音效均由代码程序化生成。七岛各有独立天气轮换（晴天 / 阴天 / 雷雨），走上海面会自动上船，靠近浅滩自动下船。
+
+操作方式：
+
+| 输入 | 功能 |
+|------|------|
+| `W A S D` | 沿球面行走 / 划船（方向相对当前镜头） |
+| `Shift` / `Space` | 奔跑（仅陆地） / 跳跃（划船时不可用） |
+| `E` | 靠近奇迹时点亮 / 关闭 |
+| `M` / `R` | 星球总览 / 镜头归位 |
+| 拖动鼠标 / 滚轮 | 环视 / 拉近拉远镜头 |
+| `Esc` | 关闭当前面板 |
+
+旅途进度与位置自动保存在 `localStorage`，刷新后可继续。
 
 ## 趣味实验
 
@@ -93,7 +114,8 @@ npm run preview
 │   └── package.json
 ├── page/                       # 独立静态页面（构建产物）
 │   ├── lifemap/                # LifeMap 人生轨迹地图
-│   └── earth3d/                # 交互式 3D 太阳系模型
+│   ├── earth3d/                # 交互式 3D 太阳系模型
+│   └── pocketPlanet/           # 口袋星球 Pocket Planet 球面漫游小游戏
 ├── assets/                     # 主应用构建产物（JS/CSS）
 ├── index.html                  # 主应用入口（GitHub Pages 首页）
 ├── test-demo/                  # 技术验证与实验性 Demo
